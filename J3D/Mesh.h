@@ -16,6 +16,5 @@ public:
 private:
 	std::vector<std::shared_ptr<Bindable>> bindables;
 	std::shared_ptr<IndexBuffer> pIndexBuffer;
-	std::shared_ptr<ConstantBuffer> pModelViewTransformBuffer;
 	
 };

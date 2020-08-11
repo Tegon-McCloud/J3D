@@ -8,9 +8,6 @@
 
 class ConstantBuffer : public Buffer {
 public:
-	using Reusable = std::false_type;
-
-public:
 
 	ConstantBuffer(Graphics& gfx, size_t bytes, uint8_t slot) : 
 		slot(slot),
@@ -47,5 +44,15 @@ class VSConstantBuffer : public ConstantBuffer {
 public:
 	void bind(Graphics& gfx) override {
 		gfx.getContext().VSSetConstantBuffers(slot, 1, pBuffer.GetAddressOf());
+	}
+};
+
+class PSConstantBuffer : public ConstantBuffer {
+	using Buffer::pBuffer;
+	using ConstantBuffer::slot;
+	using ConstantBuffer::ConstantBuffer;
+public:
+	void bind(Graphics& gfx) override {
+		gfx.getContext().PSSetConstantBuffers(slot, 1, pBuffer.GetAddressOf());
 	}
 };

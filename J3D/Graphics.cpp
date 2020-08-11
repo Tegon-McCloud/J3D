@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Scene.h"
+#include "Camera.h"
 
 #include <array>
 #include <iostream>
@@ -17,7 +18,8 @@ using namespace DXUtils;
 
 Graphics::Graphics(HWND hWnd) : 
 	bindableManager(*this),
-	pScene(std::make_unique<Scene>()) {
+	pScene(std::make_unique<Scene>()), 
+	pCamera(std::make_unique<Camera>()) {
 
 	ComPtr<ID3D11Device> pDevice;
 	ComPtr<IDXGISwapChain> pSwapChain;
@@ -51,9 +53,6 @@ Graphics::Graphics(HWND hWnd) :
 	tif(pSwapChain.As(&this->pSwapChain));
 	tif(pContext.As(&this->pContext));
 	
-	TCHAR NPath[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, NPath);
-	std::wcout << NPath << std::endl;
 }
 
 Graphics::~Graphics() {
@@ -78,7 +77,6 @@ void Graphics::render() {
 	
 	const float rgba[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 	pContext->ClearRenderTargetView(pRTV.Get(), rgba);
-
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -95,22 +93,20 @@ void Graphics::render() {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-
 	};
 
 	pDevice->CreateInputLayout(inputElementDescs, static_cast<uint32_t>(std::size(inputElementDescs)), pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &pInputLayout);
 
 	pContext->IASetInputLayout(pInputLayout.Get());
 
-	tif(D3DReadFileToBlob(L"./Shaders/PixelShader.cso", &pShaderBlob));
-	ComPtr<ID3D11PixelShader> pPixelShader;
-	tif(pDevice->CreatePixelShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), nullptr, &pPixelShader));
-	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
+	std::shared_ptr<PixelShader> pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
+
+	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
 
 	std::array<Vertex, 3> vertices{
-		Vertex{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
-		Vertex{ { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
-		Vertex{ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+		Vertex{ { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+		Vertex{ { 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+		Vertex{ { 1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
 	};
 
 	auto pVertexBuffer = bindableManager.resolve<VertexBuffer>("yay", vertices);
@@ -121,14 +117,14 @@ void Graphics::render() {
 
 	auto pIndexBuffer = bindableManager.resolve<IndexBuffer>("yay", indices);
 
-	FXMMATRIX mvp = XMMatrixTranslation(0.5f, 0.0f, 0.0f);
-	
 	Mesh mesh;
 	mesh.addBindable(pVertexBuffer);
 	mesh.addBindable(pIndexBuffer);
 	mesh.addBindable(pVertexShader);
+	mesh.addBindable(pPixelShader);
 
-	mesh.draw(*this, mvp);
+	FXMMATRIX model = XMMatrixIdentity();
+	mesh.draw(*this, model);
 	
 	PresentParameters presentParams;
 	pSwapChain->Present1(0, 0, &presentParams);
@@ -142,8 +138,16 @@ ID3D11DeviceContext4& Graphics::getContext() const {
 	return **(pContext.GetAddressOf());
 }
 
-Scene* Graphics::getScene() {
-	return pScene.get();
+BindableManager& Graphics::getBindableMgr() {
+	return bindableManager;
+}
+
+Scene& Graphics::getScene() {
+	return *pScene;
+}
+
+Camera& Graphics::getCamera() {
+	return *pCamera;
 }
 
 void Graphics::windowResized() {
@@ -160,11 +164,13 @@ void Graphics::windowResized() {
 
 	pDevice->CreateRenderTargetView(pBackBuffer.Get(), &rtvDesc, &pRTV);
 
+	swapChainDesc = SwapChainDesc(pSwapChain);
+
 	Viewport viewport(swapChainDesc);
 	pContext->RSSetViewports(1, &viewport);
 
-	swapChainDesc = SwapChainDesc(pSwapChain);
-	std::cout << swapChainDesc.BufferDesc.Width << ", " << swapChainDesc.BufferDesc.Height << "\n";
+	pCamera->resize(swapChainDesc.BufferDesc.Width, swapChainDesc.BufferDesc.Height);
+	pCamera->updateProjection();
 }
 
 

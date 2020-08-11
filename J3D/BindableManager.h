@@ -8,7 +8,6 @@ class Graphics;
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include <optional>
 #include <type_traits>
 #include <typeindex>
 
@@ -21,14 +20,14 @@ private:
 public:
 
 	template<typename T>
-	inline std::optional<std::shared_ptr<T>> get(const std::string& name) {
+	inline std::shared_ptr<T> get(const std::string& name) {
 		static_assert(std::is_base_of<Bindable, T>::value);
 
 		if constexpr (!T::Reusable::value) {
-			return {};
+			return nullptr;
 		}
 
-		auto it = bindables.find(std::pair(typeid(T), name));
+		auto it = bindables.find({ typeid(T), name });
 
 		std::shared_ptr<T> shared;
 
@@ -36,7 +35,7 @@ public:
 			return shared;
 		}
 
-		return {};
+		return nullptr;
 
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 class Scene;
+class Camera;
 
 #include "DXUtils.h"
 #include "BindableManager.h"
@@ -17,7 +18,9 @@ public:
 
 	ID3D11Device5& getDevice() const;
 	ID3D11DeviceContext4& getContext() const;
-	Scene* getScene();
+	BindableManager& getBindableMgr();
+	Scene& getScene();
+	Camera& getCamera();
 
 private:
 	void windowResized();
@@ -33,5 +36,7 @@ private:
 	BindableManager bindableManager;
 
 	std::unique_ptr<Scene> pScene;
+	std::unique_ptr<Camera> pCamera;
+
 };
 

@@ -32,7 +32,8 @@ protected:
 			tif(pBufferReflection->GetDesc(&bufferDesc));
 			tif(pShaderReflection->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc));
 
-			constantBuffers.emplace(bufferDesc.Name, std::make_shared<CBuffer>(gfx, bufferDesc.Size, bindDesc.BindPoint));
+			std::shared_ptr<CBuffer> pCBuffer = gfx.getBindableMgr().resolve<CBuffer>(bufferDesc.Name, bufferDesc.Size, bindDesc.BindPoint);
+			constantBuffers.emplace(bufferDesc.Name, pCBuffer);
 		}
 
 	}
@@ -48,10 +49,17 @@ public:
 
 	void bind(Graphics& gfx) override;
 
-	std::shared_ptr<VSConstantBuffer> getCBuffer(const std::string& bufName);
-
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> pShader;
 
 };
 
+class PixelShader : public Shader<PSConstantBuffer> {
+public:
+	PixelShader(Graphics& gfx, const std::string& file);
+
+	void bind(Graphics& gfx);
+
+private:
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pShader;
+};

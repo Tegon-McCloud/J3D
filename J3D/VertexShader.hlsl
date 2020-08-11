@@ -1,4 +1,6 @@
 
+#include "VSCBuffers.hlsli"
+
 struct Input {
     float3 pos : POSITION;
     float3 normal : NORMAL;
@@ -13,13 +15,6 @@ struct Output
     float4 pos : SV_POSITION;
 };
 
-cbuffer modelView : register(b0) {
-    float4x4 modelView;
-};
-
-cbuffer projection : register(b1) {
-    float4x4 projection;
-}
 
 Output main( Input input ) {
     
