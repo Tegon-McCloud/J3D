@@ -7,19 +7,11 @@
 #include <cassert>
 #include <memory>
 
+template<typename CBuffer>
 class Shader : public Bindable {
 public:
 
-	template<typename T>
-	inline void updateConstantBuffer(Graphics& gfx, const std::string& bufferName, const T& data) {
-		const auto it = constantBuffers.find(bufferName);
-		assert(it != constantBuffers.end());
-
-		it->second->set(gfx, data);
-	}
-
 protected:
-	template<typename T>
 	inline void reflect(Graphics& gfx, const void* pSrc, size_t srcSize) {
 
 		//static_assert(std::is_base_of<ConstantBuffer, T>::value);
@@ -40,21 +32,23 @@ protected:
 			tif(pBufferReflection->GetDesc(&bufferDesc));
 			tif(pShaderReflection->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc));
 
-			constantBuffers.emplace(bufferDesc.Name, std::make_unique<T>(gfx, bufferDesc.Size, bindDesc.BindPoint));
+			constantBuffers.emplace(bufferDesc.Name, std::make_shared<CBuffer>(gfx, bufferDesc.Size, bindDesc.BindPoint));
 		}
 
 	}
 
 protected:
-	std::unordered_map<std::string, std::unique_ptr<ConstantBuffer>> constantBuffers;
+	std::unordered_map<std::string, std::shared_ptr<CBuffer>> constantBuffers;
 
 };
 
-class VertexShader : public Shader {
+class VertexShader : public Shader<VSConstantBuffer> {
 public:
-	VertexShader(Graphics& gfx);
+	VertexShader(Graphics& gfx, const std::string& file);
 
 	void bind(Graphics& gfx) override;
+
+	std::shared_ptr<VSConstantBuffer> getCBuffer(const std::string& bufName);
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> pShader;

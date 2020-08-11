@@ -4,11 +4,9 @@
 #include "Buffer.h"
 #include "Graphics.h"
 
-
 #include <type_traits>
 
 class ConstantBuffer : public Buffer {
-	friend class Shader;
 public:
 	using Reusable = std::false_type;
 

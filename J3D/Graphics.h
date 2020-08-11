@@ -1,7 +1,11 @@
 #pragma once
 
+class Scene;
+
 #include "DXUtils.h"
 #include "BindableManager.h"
+
+#include <memory>
 
 class Graphics {
 	friend class Window;
@@ -9,11 +13,11 @@ public:
 	Graphics(HWND hWnd);
 	~Graphics();
 
-
 	void render();
 
 	ID3D11Device5& getDevice() const;
 	ID3D11DeviceContext4& getContext() const;
+	Scene* getScene();
 
 private:
 	void windowResized();
@@ -28,5 +32,6 @@ private:
 
 	BindableManager bindableManager;
 
+	std::unique_ptr<Scene> pScene;
 };
 

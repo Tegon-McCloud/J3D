@@ -9,7 +9,6 @@ class SceneNode {
 public:
 	SceneNode();
 
-
 	void move(SceneNode* pNewParent);
 
 private:
@@ -22,6 +21,7 @@ class Scene {
 public:
 	Scene();
 
+	SceneNode* getRoot();
 	SceneNode* getNode(const std::string& name);
 	SceneNode* getNode(size_t index);
 	Mesh* getMesh(const std::string& name);
@@ -34,7 +34,6 @@ private:
 
 	std::unordered_map<std::string, SceneNode*> nodeNames;
 	std::unordered_map<std::string, Mesh*> meshNames;
-
 
 };
 

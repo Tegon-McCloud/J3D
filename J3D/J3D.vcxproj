@@ -133,6 +133,7 @@
     <ClInclude Include="j3d_Graphics.h" />
     <ClInclude Include="j3d_Keyboard.h" />
     <ClInclude Include="j3d_Mouse.h" />
+    <ClInclude Include="j3d_Scene.h" />
     <ClInclude Include="j3d_Window.h" />
     <ClInclude Include="JNIUtils.h" />
     <ClInclude Include="Keyboard.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="j3d_Graphics.cpp" />
     <ClCompile Include="j3d_Keyboard.cpp" />
     <ClCompile Include="j3d_Mouse.cpp" />
+    <ClCompile Include="j3d_Scene.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="j3d_Window.cpp" />

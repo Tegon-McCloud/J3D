@@ -13,6 +13,10 @@ void SceneNode::move(SceneNode* pNewParent) {
 
 Scene::Scene() {}
 
+SceneNode* Scene::getRoot() {
+	return &root;
+}
+
 SceneNode* Scene::getNode(const std::string& name) {
 	auto it = nodeNames.find(name);
 	if (it == nodeNames.end()) {

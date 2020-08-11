@@ -5,6 +5,7 @@
 #include "ConstantBuffer.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Scene.h"
 
 #include <array>
 #include <iostream>
@@ -15,7 +16,8 @@ using namespace DXUtils;
 
 
 Graphics::Graphics(HWND hWnd) : 
-	bindableManager(*this) {
+	bindableManager(*this),
+	pScene(std::make_unique<Scene>()) {
 
 	ComPtr<ID3D11Device> pDevice;
 	ComPtr<IDXGISwapChain> pSwapChain;
@@ -81,16 +83,12 @@ void Graphics::render() {
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-
 	ComPtr<ID3DBlob> pShaderBlob;
 	
 	tif(D3DReadFileToBlob(L"./Shaders/VertexShader.cso", &pShaderBlob));
-	ComPtr<ID3D11VertexShader> pVertexShader;
-	//tif(pDevice->CreateVertexShader(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), nullptr, &pVertexShader));
-	//pContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
-	VertexShader vertexShader(*this);
-	vertexShader.bind(*this);
 	
+	std::shared_ptr<VertexShader> pVertexShader = bindableManager.resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso");
+
 	ComPtr<ID3D11InputLayout> pInputLayout;
 
 	D3D11_INPUT_ELEMENT_DESC inputElementDescs[] = {
@@ -124,13 +122,13 @@ void Graphics::render() {
 	auto pIndexBuffer = bindableManager.resolve<IndexBuffer>("yay", indices);
 
 	FXMMATRIX mvp = XMMatrixTranslation(0.5f, 0.0f, 0.0f);
-	vertexShader.updateConstantBuffer(*this, "mvp", mvp);
-
+	
 	Mesh mesh;
 	mesh.addBindable(pVertexBuffer);
 	mesh.addBindable(pIndexBuffer);
+	mesh.addBindable(pVertexShader);
 
-	mesh.draw(*this);
+	mesh.draw(*this, mvp);
 	
 	PresentParameters presentParams;
 	pSwapChain->Present1(0, 0, &presentParams);
@@ -142,6 +140,10 @@ ID3D11Device5& Graphics::getDevice() const {
 
 ID3D11DeviceContext4& Graphics::getContext() const {
 	return **(pContext.GetAddressOf());
+}
+
+Scene* Graphics::getScene() {
+	return pScene.get();
 }
 
 void Graphics::windowResized() {
