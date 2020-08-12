@@ -10,6 +10,7 @@ public:
 	SceneNode();
 
 	void move(SceneNode* pNewParent);
+	void clear();
 
 private:
 	SceneNode* pParent;
@@ -26,6 +27,9 @@ public:
 	SceneNode* getNode(size_t index);
 	Mesh* getMesh(const std::string& name);
 	Mesh* getMesh(size_t index);
+
+	void load(class Graphics& gfx, const std::string& file);
+	void reset();
 
 private:
 	SceneNode root;

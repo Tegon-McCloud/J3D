@@ -1,7 +1,8 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Graphics.h" 
+#include "Graphics.h"
+#include "ConstantBuffer.h"
 
 using namespace DirectX;
 

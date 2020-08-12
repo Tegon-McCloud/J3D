@@ -2,24 +2,31 @@
 
 #include "DXUtils.h"
 #include "Buffer.h"
+#include "Bindable.h"
 
 #include <vector>
+#include <optional>
 
-struct Vertex {
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 normal;
-	DirectX::XMFLOAT2 texcoord;
+struct VertexAttributes {
+public:
+	size_t getVertexSize() const;
+	
+public:
+	DXGI_FORMAT positionFormat;
+	std::optional<DXGI_FORMAT> normalFormat, tangentFormat;
+	std::vector<DXGI_FORMAT> texcoordFormats, colorFormats;
+
 };
 
-class VertexBuffer : public Buffer {
+class VertexBuffer : public Bindable, public Buffer {
 public:
-	template<typename Container>
-	inline VertexBuffer(class Graphics& gfx, const Container& vertices) : Buffer(gfx, vertices, D3D11_BIND_VERTEX_BUFFER) {}
-
+	VertexBuffer(class Graphics& gfx, const void* data, size_t size, const VertexAttributes& vertexAttribs);
+	VertexBuffer(class Graphics& gfx, const std::vector<std::byte>& data, const VertexAttributes& vertexAttribs);
 
 	void bind(class Graphics& gfx) override;
 
 private:
+	size_t vertexSize;
 
 };
 

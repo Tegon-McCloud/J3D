@@ -3,7 +3,6 @@
 #include "DXUtils.h"
 #include "Bindable.h"
 #include "IndexBuffer.h"
-#include "ConstantBuffer.h"
 
 #include <vector>
 #include <memory>

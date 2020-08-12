@@ -1,4 +1,7 @@
 #include "Scene.h"
+#include "Graphics.h"
+
+#include <algorithm>
 
 SceneNode::SceneNode() : pParent(nullptr) {}
 
@@ -9,6 +12,14 @@ void SceneNode::move(SceneNode* pNewParent) {
 			pParent->children.erase(it);
 		}
 	}
+
+	pNewParent->children.push_back(this);
+	pParent = pNewParent;
+}
+
+void SceneNode::clear() {
+	std::for_each(children.begin(), children.end(), [](SceneNode* pChild) -> void { pChild->pParent = nullptr; });
+	children.clear();
 }
 
 Scene::Scene() {}
@@ -41,4 +52,14 @@ Mesh* Scene::getMesh(size_t index) {
 	return &meshes[index];
 }
 
+void Scene::load(Graphics& gfx, const std::string& file) {
 
+}
+
+void Scene::reset() {
+	root.clear();
+	nodeNames.clear();
+	meshNames.clear();
+	nodes.clear();
+	meshes.clear();
+}

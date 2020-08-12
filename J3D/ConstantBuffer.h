@@ -6,22 +6,12 @@
 
 #include <type_traits>
 
-class ConstantBuffer : public Buffer {
+class ConstantBuffer : public Bindable,  public Buffer {
 public:
 
-	ConstantBuffer(Graphics& gfx, size_t bytes, uint8_t slot) : 
+	ConstantBuffer(Graphics& gfx, size_t size, uint8_t slot) : 
 		slot(slot),
-		Buffer(gfx, bytes, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, 0, bytes) {}
-
-	//template<typename T>
-	//inline ConstantBuffer(Graphics& gfx, uint32_t slot) :
-	//	slot(slot),
-	//	Buffer(gfx, sizeof(T), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, 0, sizeof(T)) {}
-
-	//template<typename T>
-	//inline ConstantBuffer(Graphics& gfx, uint32_t slot, const T& initialData) :
-	//	slot(slot),
-	//	Buffer(gfx, &initialData, sizeof(T), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, 0, sizeof(T)) {}
+		Buffer(gfx, size, D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0) {}
 
 	template<typename T>
 	void set(Graphics& gfx, const T& data) {

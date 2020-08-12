@@ -1,24 +1,19 @@
 #pragma once
 
+class Graphics;
+
 #include "DXUtils.h"
-#include "Bindable.h"
 
-#include <iostream>
+#include <cstddef>
+#include <stdint.h>
+#include <vector>
 
-class Buffer : public Bindable {
-protected:
+class Buffer {
+public:
+	Buffer(Graphics& gfx, const void* data, size_t size, D3D11_USAGE usage, uint32_t bindFlags, uint32_t cpuAccessFlags, uint32_t miscFlags, size_t structureSize);
+	Buffer(Graphics& gfx, const std::vector<std::byte>& data, D3D11_USAGE usage, uint32_t bindFlags, uint32_t cpuAccessFlags, uint32_t miscFlags, size_t structureSize);
+	Buffer(Graphics& gfx, size_t size, D3D11_USAGE usage, uint32_t bindFlags, uint32_t cpuAccessFlags, uint32_t miscFlags, size_t structureSize);
 	
-	Buffer(class Graphics& gfx, const void* pData, size_t bytes, uint32_t bindFlags, D3D11_USAGE usage = D3D11_USAGE_DEFAULT, uint32_t cpuAccessFlags = 0, uint32_t miscFlags = 0, size_t structureSize = 0);
-	template<typename T>
-	inline Buffer(class Graphics& gfx, const T* pData, size_t count, uint32_t bindFlags, D3D11_USAGE usage = D3D11_USAGE_DEFAULT, uint32_t cpuAccessFlags = 0, uint32_t miscFlags = 0) :
-		Buffer(gfx, pData, sizeof(T)* count, bindFlags, usage, cpuAccessFlags, miscFlags, sizeof(T)) {
-		std::cout << "Template constructor called";
-	}
-	template<typename Container>
-	inline Buffer(class Graphics& gfx, const Container& container, uint32_t bindFlags, D3D11_USAGE usage = D3D11_USAGE_DEFAULT, uint32_t cpuAccessFlags = 0, uint32_t miscFlags = 0) :
-		Buffer(gfx, container.data(), container.size() * sizeof(Container::value_type), bindFlags, usage, cpuAccessFlags, miscFlags, sizeof(Container::value_type)) {}
-
-	Buffer(class Graphics& gfx, size_t bytes, uint32_t bindFlags, D3D11_USAGE usage = D3D11_USAGE_DEFAULT, uint32_t cpuAccessFlags = 0, uint32_t miscFlags = 0, size_t structureSize = 0);
-
+protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pBuffer;
 };

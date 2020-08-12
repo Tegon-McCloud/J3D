@@ -81,37 +81,24 @@ void Graphics::render() {
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	ComPtr<ID3DBlob> pShaderBlob;
-	
-	tif(D3DReadFileToBlob(L"./Shaders/VertexShader.cso", &pShaderBlob));
-	
-	std::shared_ptr<VertexShader> pVertexShader = bindableManager.resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso");
+	auto pVertexShader = bindableManager.resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso");
+	auto pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
 
-	ComPtr<ID3D11InputLayout> pInputLayout;
-
-	D3D11_INPUT_ELEMENT_DESC inputElementDescs[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	VertexAttributes vertexAttribs;
+	vertexAttribs.positionFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexAttribs.normalFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexAttribs.texcoordFormats.push_back(DXGI_FORMAT_R32G32_FLOAT);
+	
+	std::vector<float> vertexData{
+		0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 	};
 
-	pDevice->CreateInputLayout(inputElementDescs, static_cast<uint32_t>(std::size(inputElementDescs)), pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), &pInputLayout);
 
-	pContext->IASetInputLayout(pInputLayout.Get());
+	auto pVertexBuffer = bindableManager.resolve<VertexBuffer>("yay", vertexData.data(), vertexData.size() * sizeof(float), vertexAttribs);
 
-	std::shared_ptr<PixelShader> pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
-
-	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
-
-	std::array<Vertex, 3> vertices{
-		Vertex{ { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
-		Vertex{ { 0.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
-		Vertex{ { 1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
-	};
-
-	auto pVertexBuffer = bindableManager.resolve<VertexBuffer>("yay", vertices);
-
-	std::array<Index, 3> indices{
+	std::vector<uint32_t> indices{
 		0, 1, 2
 	};
 
@@ -122,6 +109,8 @@ void Graphics::render() {
 	mesh.addBindable(pIndexBuffer);
 	mesh.addBindable(pVertexShader);
 	mesh.addBindable(pPixelShader);
+
+	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
 
 	FXMMATRIX model = XMMatrixIdentity();
 	mesh.draw(*this, model);

@@ -39,8 +39,8 @@ void Camera::lookAt(DirectX::FXMVECTOR pos) {
 }
 
 void Camera::resize(uint32_t width, uint32_t height) {
-    this->width = width;
-    this->height = height;
+    this->width = static_cast<float>(width);
+    this->height = static_cast<float>(height);
 }
 
 void Camera::setFov(float fov) {
