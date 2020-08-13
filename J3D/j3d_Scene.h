@@ -9,11 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     j3d_Scene
- * Method:    load
- * Signature: (Ljava/lang/String;)V
+ * Method:    init
+ * Signature: (Lj3d/Graphics;Ljava/lang/String;)J
  */
-JNIEXPORT void JNICALL Java_j3d_Scene_load
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jlong JNICALL Java_j3d_Scene_init
+  (JNIEnv *, jobject, jobject, jstring);
+
+/*
+ * Class:     j3d_Scene
+ * Method:    close
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_j3d_Scene_close
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }

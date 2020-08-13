@@ -1,5 +1,7 @@
 package j3d;
 
+import java.io.File;
+
 public class Window {
 
 	static {
@@ -50,6 +52,9 @@ public class Window {
 		Keyboard kbd = wnd.getKeyboard();
 		Mouse mouse = wnd.getMouse();
 		Graphics gfx = wnd.getGraphics();
+
+		Scene scene = new Scene(gfx, new File("%USERPROFILE%\\desktop\\3d models\\test\\test.gltf"));
+		gfx.setScene(scene);
 
 		KeyEvent keyEvent;
 		MouseEvent mouseEvent;

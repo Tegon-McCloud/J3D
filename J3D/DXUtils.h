@@ -145,4 +145,44 @@ namespace DXUtils {
 
 	};
 
+	class AggregateType {
+	public:
+		static const AggregateType SCALAR;
+		static const AggregateType VEC2;
+		static const AggregateType VEC3;
+		static const AggregateType VEC4;
+		static const AggregateType MAT2;
+		static const AggregateType MAT3;
+		static const AggregateType MAT4;
+
+	private:
+		AggregateType(size_t count);
+
+	public:
+		const size_t count;
+	};
+
+	struct ComponentType {
+	public:
+		static const ComponentType BYTE;
+		static const ComponentType UNSIGNED_BYTE;
+		static const ComponentType SHORT;
+		static const ComponentType UNSIGNED_SHORT;
+		static const ComponentType UNSIGNED_INT;
+		static const ComponentType FLOAT;
+
+	private:
+		ComponentType(size_t bytes);
+
+	public:
+		const size_t bytes;
+	};
+
+	struct Format {
+		AggregateType aggregateType;
+		ComponentType componentType;
+
+		size_t getSize() const;
+	};
+
 }

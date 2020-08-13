@@ -12,9 +12,9 @@ public:
 	size_t getVertexSize() const;
 	
 public:
-	DXGI_FORMAT positionFormat;
-	std::optional<DXGI_FORMAT> normalFormat, tangentFormat;
-	std::vector<DXGI_FORMAT> texcoordFormats, colorFormats;
+	DXUtils::Format positionFormat;
+	std::optional<DXUtils::Format> normalFormat, tangentFormat;
+	std::vector <DXUtils::Format> texcoordFormats, colorFormats;
 
 };
 

@@ -19,38 +19,23 @@ void VertexBuffer::bind(Graphics& gfx) {
 	gfx.getContext().IASetVertexBuffers(0, 1, pBuffer.GetAddressOf(), &stride, &offset);
 }
 
-size_t formatSize(DXGI_FORMAT format) {
-	switch (format) {
-	case DXGI_FORMAT_R32_FLOAT:
-		return 4;
-	case DXGI_FORMAT_R32G32_FLOAT:
-		return 8;
-	case DXGI_FORMAT_R32G32B32_FLOAT:
-		return 12;
-	case DXGI_FORMAT_R32G32B32A32_FLOAT:
-		return 16;
-	default:
-		assert("format not supported for vertex attributes" && false);
-	}
-}
-
 size_t VertexAttributes::getVertexSize() const {
-	size_t size = formatSize(positionFormat);
+	size_t size = positionFormat.getSize();
 	
 	if (normalFormat.has_value()) {
-		size += formatSize(normalFormat.value());
+		size += normalFormat.value().getSize();
 	}
 	
 	if (tangentFormat.has_value()) {
-		size += formatSize(tangentFormat.value());
+		size += tangentFormat.value().getSize();
 	}
 
-	for (DXGI_FORMAT format : texcoordFormats) {
-		size += formatSize(format);
+	for (DXUtils::Format format : texcoordFormats) {
+		size += format.getSize();
 	}
 
-	for (DXGI_FORMAT format : colorFormats) {
-		size += formatSize(format);
+	for (DXUtils::Format format : colorFormats) {
+		size += format.getSize();
 	}
 
 	return size;

@@ -9,19 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     j3d_Graphics
- * Method:    getSceneHandle
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_j3d_Graphics_getSceneHandle
-  (JNIEnv *, jobject);
-
-/*
- * Class:     j3d_Graphics
  * Method:    render
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_j3d_Graphics_render
   (JNIEnv *, jobject);
+
+/*
+ * Class:     j3d_Graphics
+ * Method:    setScene
+ * Signature: (Lj3d/Scene;)V
+ */
+JNIEXPORT void JNICALL Java_j3d_Graphics_setScene
+  (JNIEnv *, jobject, jobject);
 
 #ifdef __cplusplus
 }

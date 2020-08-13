@@ -20,16 +20,13 @@ private:
 
 class Scene {
 public:
-	Scene();
+	Scene(class Graphics& gfx, const std::string& file);
 
 	SceneNode* getRoot();
 	SceneNode* getNode(const std::string& name);
 	SceneNode* getNode(size_t index);
 	Mesh* getMesh(const std::string& name);
 	Mesh* getMesh(size_t index);
-
-	void load(class Graphics& gfx, const std::string& file);
-	void reset();
 
 private:
 	SceneNode root;
@@ -39,5 +36,6 @@ private:
 	std::unordered_map<std::string, SceneNode*> nodeNames;
 	std::unordered_map<std::string, Mesh*> meshNames;
 
+	class Graphics& gfx;
 };
 

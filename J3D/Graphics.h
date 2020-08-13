@@ -19,8 +19,10 @@ public:
 	ID3D11Device5& getDevice() const;
 	ID3D11DeviceContext4& getContext() const;
 	BindableManager& getBindableMgr();
-	Scene& getScene();
 	Camera& getCamera();
+
+	Scene* getScene() const;
+	void setScene(Scene* pScene);
 
 private:
 	void windowResized();
@@ -35,8 +37,8 @@ private:
 
 	BindableManager bindableManager;
 
-	std::unique_ptr<Scene> pScene;
 	std::unique_ptr<Camera> pCamera;
+	Scene* pScene;
 
 };
 

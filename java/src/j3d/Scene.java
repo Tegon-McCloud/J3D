@@ -7,14 +7,11 @@ public class Scene {
     @SuppressWarnings("unused")	// used natively
     private long nativeHandle;
 
-    public Scene(long handle) {
-        nativeHandle = handle;
+    public Scene(Graphics gfx, File file) {
+        nativeHandle = init(gfx, file.getAbsolutePath());
     }
 
-    public void load(File f) {
-        load(f.getAbsoluteFile());
-    }
-
-    public native void load(String file);
+    private native long init(Graphics gfx, String file);
+    private native void close();
 
 }

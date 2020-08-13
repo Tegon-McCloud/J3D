@@ -1,7 +1,10 @@
 #include "Scene.h"
 #include "Graphics.h"
 
+#include "json.hpp"
+
 #include <algorithm>
+#include <fstream>
 
 SceneNode::SceneNode() : pParent(nullptr) {}
 
@@ -22,7 +25,15 @@ void SceneNode::clear() {
 	children.clear();
 }
 
-Scene::Scene() {}
+Scene::Scene(Graphics& gfx, const std::string& file) :
+	gfx(gfx) {
+	
+	std::ifstream fs(file);
+	nlohmann::json json = nlohmann::json::parse(fs);
+
+	std::vector<>
+
+}
 
 SceneNode* Scene::getRoot() {
 	return &root;
@@ -50,16 +61,4 @@ Mesh* Scene::getMesh(const std::string& name) {
 
 Mesh* Scene::getMesh(size_t index) {
 	return &meshes[index];
-}
-
-void Scene::load(Graphics& gfx, const std::string& file) {
-
-}
-
-void Scene::reset() {
-	root.clear();
-	nodeNames.clear();
-	meshNames.clear();
-	nodes.clear();
-	meshes.clear();
 }

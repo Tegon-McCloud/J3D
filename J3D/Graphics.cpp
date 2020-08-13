@@ -18,7 +18,7 @@ using namespace DXUtils;
 
 Graphics::Graphics(HWND hWnd) : 
 	bindableManager(*this),
-	pScene(std::make_unique<Scene>()), 
+	pScene(nullptr),
 	pCamera(std::make_unique<Camera>()) {
 
 	ComPtr<ID3D11Device> pDevice;
@@ -85,16 +85,15 @@ void Graphics::render() {
 	auto pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
 
 	VertexAttributes vertexAttribs;
-	vertexAttribs.positionFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexAttribs.positionFormat.aggregateType = DXUtils::AggregateType::;
 	vertexAttribs.normalFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 	vertexAttribs.texcoordFormats.push_back(DXGI_FORMAT_R32G32_FLOAT);
 	
 	std::vector<float> vertexData{
-		0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 	};
-
 
 	auto pVertexBuffer = bindableManager.resolve<VertexBuffer>("yay", vertexData.data(), vertexData.size() * sizeof(float), vertexAttribs);
 
@@ -131,12 +130,16 @@ BindableManager& Graphics::getBindableMgr() {
 	return bindableManager;
 }
 
-Scene& Graphics::getScene() {
-	return *pScene;
-}
-
 Camera& Graphics::getCamera() {
 	return *pCamera;
+}
+
+Scene* Graphics::getScene() const {
+	return pScene;
+}
+
+void Graphics::setScene(Scene* pScene) {
+	this->pScene = pScene;
 }
 
 void Graphics::windowResized() {
