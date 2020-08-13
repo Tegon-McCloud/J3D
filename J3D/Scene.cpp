@@ -1,10 +1,16 @@
 #include "Scene.h"
 #include "Graphics.h"
+#include "SceneLoading.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 #include "json.hpp"
 
 #include <algorithm>
 #include <fstream>
+#include <filesystem>
+
+using nlohmann::json;
 
 SceneNode::SceneNode() : pParent(nullptr) {}
 
@@ -25,13 +31,72 @@ void SceneNode::clear() {
 	children.clear();
 }
 
-Scene::Scene(Graphics& gfx, const std::string& file) :
+Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 	gfx(gfx) {
 	
 	std::ifstream fs(file);
-	nlohmann::json json = nlohmann::json::parse(fs);
+	json j = nlohmann::json::parse(fs);
 
-	std::vector<>
+	std::vector<GLTF::Buffer> buffers;
+	std::vector<GLTF::BufferView> views;
+	std::vector<GLTF::Accessor> accessors;
+
+	json jbuffers = j.at("buffers");
+	json jviews = j.at("bufferViews");
+	json jaccessors = j.at("accessors");
+	json jmeshes = j.at("meshes");
+
+	for (auto& jbuffer : jbuffers) {
+		std::filesystem::path bufferFile = file.parent_path();
+		bufferFile.append(jbuffer.at("uri").get<std::string>());
+		
+		GLTF::Buffer buffer;
+		buffer.size = jbuffer.at("byteLength").get<size_t>();
+		buffer.stream = std::ifstream(bufferFile);
+
+		buffers.emplace_back(std::move(buffer));
+	}
+
+	for (auto& jview : jviews) {
+		GLTF::BufferView view;
+		view.pBuffer = &buffers[jview.at("buffer").get<size_t>()];
+		view.length = jview.at("byteLength").get<size_t>();
+		view.offset = jview.contains("byteOffset") ? jview.at("byteOffset").get<size_t>() : 0;
+		view.stride = jview.contains("byteStride") ? jview.at("byteStride").get<size_t>() : 0;
+		
+		view.length = jview.at("byteLength");
+	}
+
+	for (auto& jaccessor : jaccessors) {
+		GLTF::Accessor accessor;
+		accessor.pView = &views[jaccessor.at("bufferView").get<size_t>()];
+		accessor.byteOffset = jaccessor.contains("byteOffset") ? jaccessor.at("byteOffset").get<size_t>() : 0;
+		accessor.count = jaccessor.at("count");
+	}
+
+	for (auto& jmesh : jmeshes) {
+		
+		meshes.emplace_back();
+		Mesh* pMesh = &meshes.back();
+
+		std::shared_ptr<VertexBuffer> pVB;
+		std::shared_ptr<IndexBuffer> pIB;
+
+
+		if (jmesh.contains("name")) {
+			meshNames[jmesh.at("name")] = pMesh;
+		}
+
+		
+		auto& jprimitive = jmesh.at("primitives").at(0);
+		auto& jattributes = jprimitive.at("attributes");
+
+		for (auto& jattribute : jattributes) {
+
+		}
+
+	}
+
 
 }
 

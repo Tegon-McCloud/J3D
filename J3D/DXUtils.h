@@ -155,11 +155,14 @@ namespace DXUtils {
 		static const AggregateType MAT3;
 		static const AggregateType MAT4;
 
+	public:
+		AggregateType();
 	private:
 		AggregateType(size_t count);
-
 	public:
-		const size_t count;
+		size_t getCount() const;
+	private:
+		size_t count;
 	};
 
 	struct ComponentType {
@@ -170,15 +173,21 @@ namespace DXUtils {
 		static const ComponentType UNSIGNED_SHORT;
 		static const ComponentType UNSIGNED_INT;
 		static const ComponentType FLOAT;
-
+	public:
+		ComponentType();
 	private:
 		ComponentType(size_t bytes);
-
 	public:
-		const size_t bytes;
+		size_t getBytes() const;
+	private:
+		size_t bytes;
+
 	};
 
 	struct Format {
+		Format() = default;
+		Format(AggregateType aggregateType, ComponentType componentType);
+
 		AggregateType aggregateType;
 		ComponentType componentType;
 

@@ -40,6 +40,9 @@
     <Filter Include="Shader Header Files">
       <UniqueIdentifier>{8248f6ea-7dff-4c78-a76e-e57d92a9d3be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DX\Bindables">
+      <UniqueIdentifier>{2ae76469-a12d-4709-8402-83e6c7b4e005}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -72,32 +75,32 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files\DX</Filter>
     </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files\DX</Filter>
-    </ClCompile>
-    <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files\DX</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="j3d_Scene.cpp">
       <Filter>Source Files\JNI</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneLoading.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DXUtils.cpp">
       <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoading.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\DX\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files\DX\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -171,7 +174,7 @@
       <Filter>Header Files\DX</Filter>
     </ClInclude>
     <ClInclude Include="SceneLoading.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,8 @@
 
 struct VertexAttributes {
 public:
+	VertexAttributes();
+
 	size_t getVertexSize() const;
 	
 public:

@@ -19,6 +19,8 @@ void VertexBuffer::bind(Graphics& gfx) {
 	gfx.getContext().IASetVertexBuffers(0, 1, pBuffer.GetAddressOf(), &stride, &offset);
 }
 
+VertexAttributes::VertexAttributes() : positionFormat(DXUtils::AggregateType::VEC3,  DXUtils::ComponentType::FLOAT) {}
+
 size_t VertexAttributes::getVertexSize() const {
 	size_t size = positionFormat.getSize();
 	

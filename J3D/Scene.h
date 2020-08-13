@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <filesystem>
 
 class SceneNode {
 public:
@@ -20,7 +21,7 @@ private:
 
 class Scene {
 public:
-	Scene(class Graphics& gfx, const std::string& file);
+	Scene(class Graphics& gfx, const std::filesystem::path& file);
 
 	SceneNode* getRoot();
 	SceneNode* getNode(const std::string& name);

@@ -85,9 +85,9 @@ void Graphics::render() {
 	auto pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
 
 	VertexAttributes vertexAttribs;
-	vertexAttribs.positionFormat.aggregateType = DXUtils::AggregateType::;
-	vertexAttribs.normalFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-	vertexAttribs.texcoordFormats.push_back(DXGI_FORMAT_R32G32_FLOAT);
+	vertexAttribs.positionFormat = Format(AggregateType::VEC3, ComponentType::FLOAT);
+	vertexAttribs.normalFormat = Format(AggregateType::VEC3, ComponentType::FLOAT);;
+	vertexAttribs.texcoordFormats.push_back(Format(AggregateType::VEC2, ComponentType::FLOAT));
 	
 	std::vector<float> vertexData{
 		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,

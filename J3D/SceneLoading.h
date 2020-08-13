@@ -4,11 +4,11 @@
 
 #include <fstream>
 
-namespace SceneLoading {
+namespace GLTF {
 
 	struct Buffer {
 		size_t size;
-		std::ifstream data;
+		std::ifstream stream;
 	};
 
 	struct BufferView {
@@ -22,9 +22,11 @@ namespace SceneLoading {
 		BufferView* pView;
 		size_t byteOffset;
 		size_t count;
-		DXUtils::Format type;
+		DXUtils::Format format;
 
 	};
+
+	DXUtils::Format getFormat(const std::string& gltfType, uint64_t gltfComponentType);
 
 }
 
