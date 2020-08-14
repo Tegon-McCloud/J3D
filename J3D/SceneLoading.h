@@ -3,6 +3,7 @@
 #include "DXUtils.h"
 
 #include <fstream>
+#include <cstddef>
 
 namespace GLTF {
 
@@ -23,6 +24,8 @@ namespace GLTF {
 		size_t byteOffset;
 		size_t count;
 		DXUtils::Format format;
+
+		void copyTo(std::byte* pDst, size_t dstOffset, size_t dstStride);
 
 	};
 

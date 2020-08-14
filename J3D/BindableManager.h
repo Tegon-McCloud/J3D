@@ -48,6 +48,10 @@ public:
 		if constexpr (!T::Reusable::value) {
 			return std::make_shared<T>(owner, std::forward<Args>(args)...);
 		}
+		 
+		if (name == "") {
+			return std::make_shared<T>(owner, std::forward<Args>(args)...);
+		}
 
 		decltype(bindables)::iterator it = bindables.find({ typeid(T), name });
 

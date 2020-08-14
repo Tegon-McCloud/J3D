@@ -80,6 +80,11 @@ void Graphics::render() {
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
+
+	pCamera->moveTo(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
+	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f));
+	pCamera->updateView();
 
 	auto pVertexShader = bindableManager.resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso");
 	auto pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
@@ -108,12 +113,15 @@ void Graphics::render() {
 	mesh.addBindable(pIndexBuffer);
 	mesh.addBindable(pVertexShader);
 	mesh.addBindable(pPixelShader);
-
-	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
-
-	FXMMATRIX model = XMMatrixIdentity();
-	mesh.draw(*this, model);
 	
+	FXMMATRIX model = XMMatrixTranslation(1.0f, 1.0f, 0.0f);
+	mesh.draw(*this, model);
+
+
+	if (pScene) {
+		pScene->draw(*this);
+	}
+
 	PresentParameters presentParams;
 	pSwapChain->Present1(0, 0, &presentParams);
 }

@@ -19,19 +19,11 @@ void VertexBuffer::bind(Graphics& gfx) {
 	gfx.getContext().IASetVertexBuffers(0, 1, pBuffer.GetAddressOf(), &stride, &offset);
 }
 
-VertexAttributes::VertexAttributes() : positionFormat(DXUtils::AggregateType::VEC3,  DXUtils::ComponentType::FLOAT) {}
-
 size_t VertexAttributes::getVertexSize() const {
 	size_t size = positionFormat.getSize();
+	size += normalFormat.getSize();
+	size += tangentFormat.getSize();
 	
-	if (normalFormat.has_value()) {
-		size += normalFormat.value().getSize();
-	}
-	
-	if (tangentFormat.has_value()) {
-		size += tangentFormat.value().getSize();
-	}
-
 	for (DXUtils::Format format : texcoordFormats) {
 		size += format.getSize();
 	}
@@ -41,4 +33,31 @@ size_t VertexAttributes::getVertexSize() const {
 	}
 
 	return size;
+}
+
+size_t VertexAttributes::positionOffset() const {
+	return 0;
+}
+
+size_t VertexAttributes::normalOffset() const {
+	return positionFormat.getSize();
+}
+
+size_t VertexAttributes::tangentOffset() const {
+	return normalOffset() + normalFormat.getSize();
+}
+
+size_t VertexAttributes::texcoordOffset(size_t i) const {
+	
+	if (i == 0) {
+		return tangentOffset() + tangentFormat.getSize();
+	}
+	return texcoordOffset(i - 1) + texcoordFormats[i - 1].getSize();
+}
+
+size_t VertexAttributes::colorOffset(size_t i) const {
+	if (i == 0) {
+		return texcoordOffset(texcoordFormats.size() - 1);
+	}
+	return colorOffset(i - 1) + colorFormats[i - 1].getSize();
 }

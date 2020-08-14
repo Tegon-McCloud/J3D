@@ -29,6 +29,8 @@ public:
 	Mesh* getMesh(const std::string& name);
 	Mesh* getMesh(size_t index);
 
+	void draw(class Graphics& gfx);
+
 private:
 	SceneNode root;
 	std::vector<SceneNode> nodes;

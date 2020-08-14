@@ -9,13 +9,19 @@
 
 struct VertexAttributes {
 public:
-	VertexAttributes();
+	VertexAttributes() = default;
 
 	size_t getVertexSize() const;
 	
+	size_t positionOffset() const;
+	size_t normalOffset() const;
+	size_t tangentOffset() const;
+	size_t texcoordOffset(size_t i) const;
+	size_t colorOffset(size_t i) const;
+
+
 public:
-	DXUtils::Format positionFormat;
-	std::optional<DXUtils::Format> normalFormat, tangentFormat;
+	DXUtils::Format positionFormat, normalFormat, tangentFormat;
 	std::vector <DXUtils::Format> texcoordFormats, colorFormats;
 
 };

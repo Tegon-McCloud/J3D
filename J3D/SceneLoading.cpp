@@ -26,3 +26,24 @@ DXUtils::Format GLTF::getFormat(const std::string& gltfType, uint64_t gltfCompon
 
 	return DXUtils::Format(typeMap.at(gltfType), componentTypeMap.at(gltfComponentType));
 }
+
+void GLTF::Accessor::copyTo(std::byte* pDst, size_t dstOffset, size_t dstStride) {
+
+	pView->pBuffer->stream.clear();
+
+	const size_t chunkSize = format.getSize();
+
+	pDst += dstOffset;
+	
+	size_t srcOffset = byteOffset + pView->offset;
+	const size_t srcStride = pView->stride == 0 ? chunkSize : pView->stride;
+
+	for (uint64_t i = 0; i < count; i++) {
+		pView->pBuffer->stream.seekg(srcOffset);
+		
+		pView->pBuffer->stream.read(reinterpret_cast<char*>(pDst), chunkSize);
+
+		pDst += dstStride;
+		srcOffset += srcStride;
+	}
+}

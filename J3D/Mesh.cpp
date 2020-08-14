@@ -12,7 +12,7 @@ void Mesh::draw(Graphics& gfx, DirectX::FXMMATRIX transform) {
 	}
 	pIndexBuffer->bind(gfx);
 	
-	gfx.getBindableMgr().get<VSConstantBuffer>("modelView")->set(gfx, XMMatrixMultiplyTranspose(transform, gfx.getCamera().getView()));
+	gfx.getBindableMgr().get<VSConstantBuffer>("modelView")->set(gfx, XMMatrixMultiplyTranspose(gfx.getCamera().getView(), transform));
 
 	gfx.getContext().DrawIndexed(pIndexBuffer->count(), 0, 0);
 }
