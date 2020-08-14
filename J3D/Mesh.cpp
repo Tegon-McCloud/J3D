@@ -14,7 +14,7 @@ void Mesh::draw(Graphics& gfx, DirectX::FXMMATRIX transform) {
 	
 	gfx.getBindableMgr().get<VSConstantBuffer>("modelView")->set(gfx, XMMatrixMultiplyTranspose(gfx.getCamera().getView(), transform));
 
-	gfx.getContext().DrawIndexed(pIndexBuffer->count(), 0, 0);
+	gfx.getContext().DrawIndexed(static_cast<UINT>(pIndexBuffer->count()), 0, 0);
 }
 
 void Mesh::addBindable(std::shared_ptr<Bindable> pBindable) {

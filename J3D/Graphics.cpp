@@ -80,43 +80,11 @@ void Graphics::render() {
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	bindableManager.get<VSConstantBuffer>("projection")->set(*this, pCamera->getProjection());
+	bindableManager.get<VSConstantBuffer>("projection")->set(*this, XMMatrixTranspose(pCamera->getProjection()));
 
-	pCamera->moveTo(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
-	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f));
+	pCamera->moveTo(XMVectorSet(0.0f, 2.0f, -12.0f, 1.0f));
+	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
-
-	auto pVertexShader = bindableManager.resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso");
-	auto pPixelShader = bindableManager.resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso");
-
-	VertexAttributes vertexAttribs;
-	vertexAttribs.positionFormat = Format(AggregateType::VEC3, ComponentType::FLOAT);
-	vertexAttribs.normalFormat = Format(AggregateType::VEC3, ComponentType::FLOAT);;
-	vertexAttribs.texcoordFormats.push_back(Format(AggregateType::VEC2, ComponentType::FLOAT));
-	
-	std::vector<float> vertexData{
-		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-	};
-
-	auto pVertexBuffer = bindableManager.resolve<VertexBuffer>("yay", vertexData.data(), vertexData.size() * sizeof(float), vertexAttribs);
-
-	std::vector<uint32_t> indices{
-		0, 1, 2
-	};
-
-	auto pIndexBuffer = bindableManager.resolve<IndexBuffer>("yay", indices);
-
-	Mesh mesh;
-	mesh.addBindable(pVertexBuffer);
-	mesh.addBindable(pIndexBuffer);
-	mesh.addBindable(pVertexShader);
-	mesh.addBindable(pPixelShader);
-	
-	FXMMATRIX model = XMMatrixTranslation(1.0f, 1.0f, 0.0f);
-	mesh.draw(*this, model);
-
 
 	if (pScene) {
 		pScene->draw(*this);

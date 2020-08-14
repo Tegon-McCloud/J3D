@@ -9,6 +9,7 @@
 #include <DirectXMath.h>
 
 #include <stdint.h>
+#include <vector>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -192,6 +193,25 @@ namespace DXUtils {
 		ComponentType componentType;
 
 		size_t getSize() const;
+	};
+
+	struct VertexAttributes {
+	public:
+		VertexAttributes() = default;
+
+		size_t getVertexSize() const;
+
+		size_t positionOffset() const;
+		size_t normalOffset() const;
+		size_t tangentOffset() const;
+		size_t texcoordOffset(size_t i) const;
+		size_t colorOffset(size_t i) const;
+
+
+	public:
+		Format positionFormat, normalFormat, tangentFormat;
+		std::vector<Format> texcoordFormats, colorFormats;
+
 	};
 
 }

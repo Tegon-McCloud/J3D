@@ -5,7 +5,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 
-#include "json.hpp"
+#include <json.hpp>
 
 #include <algorithm>
 #include <fstream>
@@ -13,9 +13,24 @@
 #include <cstddef>
 #include <sstream>
 
-using nlohmann::json;
+using namespace DirectX;
 
-SceneNode::SceneNode() : pParent(nullptr) {}
+SceneNode::SceneNode() : pParent(nullptr), pMesh(nullptr), transform() {
+	XMStoreFloat4x4(&transform, XMMatrixIdentity());
+}
+
+void SceneNode::draw(Graphics& gfx, DirectX::FXMMATRIX parentTransform) {
+	
+	XMMATRIX accumulated = XMMatrixMultiply(parentTransform, XMLoadFloat4x4(&transform));
+
+	for (auto pChild : children) {
+		pChild->draw(gfx, accumulated);
+	}
+
+	if (pMesh) {
+		pMesh->draw(gfx, accumulated);
+	}
+}
 
 void SceneNode::move(SceneNode* pNewParent) {
 	if (pParent) {
@@ -34,11 +49,17 @@ void SceneNode::clear() {
 	children.clear();
 }
 
+void SceneNode::setMesh(Mesh* pMesh) {
+	this->pMesh = pMesh;
+}
+
 Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 	gfx(gfx) {
 	
-	std::ifstream fs(file);
-	json j = nlohmann::json::parse(fs);
+	using nlohmann::json;
+
+	std::ifstream ifs(file);
+	json j = json::parse(ifs);
 
 	std::vector<GLTF::Buffer> buffers;
 	std::vector<GLTF::BufferView> views;
@@ -52,7 +73,7 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 	for (auto& jbuffer : jbuffers) {
 		std::filesystem::path bufferFile = file.parent_path();
 		bufferFile.append(jbuffer.at("uri").get<std::string>());
-		
+
 		GLTF::Buffer buffer;
 		buffer.size = jbuffer.at("byteLength").get<size_t>();
 		buffer.stream = std::ifstream(bufferFile, std::ios::binary);
@@ -66,7 +87,7 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 		view.length = jview.at("byteLength").get<size_t>();
 		view.offset = jview.contains("byteOffset") ? jview.at("byteOffset").get<size_t>() : 0;
 		view.stride = jview.contains("byteStride") ? jview.at("byteStride").get<size_t>() : 0;
-		
+
 		view.length = jview.at("byteLength");
 		views.emplace_back(std::move(view));
 	}
@@ -82,28 +103,21 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 	}
 
 	for (auto& jmesh : jmeshes) {
-		
-		meshes.emplace_back();
-		Mesh& mesh = meshes.back();
 
-		VertexAttributes vertexAttribs;
+		DXUtils::VertexAttributes vertexAttribs;
 
 		std::shared_ptr<VertexBuffer> pVB;
 		std::shared_ptr<IndexBuffer> pIB;
 
-		std::string name;
+		std::string name = jmesh.contains("name") ? jmesh.at("name").get<std::string>() : "";
 
-		if (jmesh.contains("name")) {
-			name = jmesh.at("name").get<std::string>();
-			meshNames[name] = &mesh;
+		pVB = gfx.getBindableMgr().get<VertexBuffer>(name);
+		pIB = gfx.getBindableMgr().get<IndexBuffer>(name);
 
-			pVB = gfx.getBindableMgr().get<VertexBuffer>(name);
-			pIB = gfx.getBindableMgr().get<IndexBuffer>(name);
-		}
-		else {
-			name = "";
-		}
-		
+		meshes.emplace_back();
+		Mesh& mesh = meshes.back();
+		if (name != "") meshNames[name] = &mesh;
+
 		auto& jprimitive = jmesh.at("primitives").at(0);
 		auto& jattributes = jprimitive.at("attributes");
 
@@ -167,7 +181,7 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 			size_t vertexSize = vertexAttribs.getVertexSize();
 
 			std::vector<std::byte> vertexData(pPositionAccessor->count * vertexSize);
-			
+
 			pPositionAccessor->copyTo(vertexData.data(), vertexAttribs.positionOffset(), vertexSize);
 			if (pNormalAccessor) {
 				pNormalAccessor->copyTo(vertexData.data(), vertexAttribs.normalOffset(), vertexSize);
@@ -181,7 +195,7 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 			for (i = 0; i < colorAccessors.size(); i++) {
 				colorAccessors[i]->copyTo(vertexData.data(), vertexAttribs.colorOffset(i), vertexSize);
 			}
-			
+
 			pVB = gfx.getBindableMgr().resolve<VertexBuffer>(name, vertexData.data(), vertexData.size(), vertexAttribs);
 		}
 
@@ -199,6 +213,38 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 		mesh.addBindable(pIB);
 		mesh.addBindable(gfx.getBindableMgr().resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso"));
 		mesh.addBindable(gfx.getBindableMgr().resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso"));
+	}
+	
+	auto& jnodes = j.at("nodes");
+	
+	for (auto& jnode : jnodes) {
+		nodes.emplace_back();
+		if (jnode.contains("name")) {
+			nodeNames[jnode.at("name").get<std::string>()] = &nodes.back();
+		}
+		if (jnode.contains("mesh")) {
+			nodes.back().setMesh(&meshes[jnode.at("mesh").get<size_t>()]);
+		}
+
+	}
+
+	// link nodes
+	for (uint64_t i = 0; i < nodes.size(); i++) {
+		auto& jnode = jnodes.at(i);
+		if (jnode.contains("children")) {
+			auto& childIndices = jnode.at("children");
+			for (auto& childIndex : childIndices) {
+				nodes[childIndex.get<size_t>()].move(&nodes[i]);
+			}
+		}
+	}
+
+	auto& jscene = j.at("scenes").at(0);
+	if (jscene.contains("nodes")) {
+		auto& nodeIndices = jscene.at("nodes");
+		for (auto& nodeIndex : nodeIndices) {
+			nodes[nodeIndex.get<size_t>()].move(&root);
+		}
 	}
 }
 
@@ -231,7 +277,5 @@ Mesh* Scene::getMesh(size_t index) {
 }
 
 void Scene::draw(Graphics& gfx) {
-	for (auto& mesh : meshes) {
-		mesh.draw(gfx, DirectX::XMMatrixTranslation(0.0f, 0.0f, 2.0f));
-	}
+	root.draw(gfx, XMMatrixIdentity());
 }

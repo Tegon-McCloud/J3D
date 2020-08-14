@@ -53,7 +53,7 @@ public class Window {
 		Mouse mouse = wnd.getMouse();
 		Graphics gfx = wnd.getGraphics();
 
-		Scene scene = new Scene(gfx, new File("models/test/test.gltf"));
+		Scene scene = new Scene(gfx, new File("models/dragon/dragon.gltf"));
 		gfx.setScene(scene);
 
 		KeyEvent keyEvent;

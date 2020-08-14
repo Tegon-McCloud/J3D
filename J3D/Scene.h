@@ -10,13 +10,18 @@ class SceneNode {
 public:
 	SceneNode();
 
+	void draw(class Graphics& gfx, DirectX::FXMMATRIX parentTransform);
+
 	void move(SceneNode* pNewParent);
 	void clear();
 
+	void setMesh(Mesh* pMesh);
+
 private:
+	DirectX::XMFLOAT4X4 transform;
 	SceneNode* pParent;
 	std::vector<SceneNode*> children;
-	std::vector<Mesh*> meshes;
+	Mesh* pMesh;
 };
 
 class Scene {
@@ -41,4 +46,3 @@ private:
 
 	class Graphics& gfx;
 };
-

@@ -89,7 +89,7 @@ VertexShader::VertexShader(Graphics& gfx, const std::string& file) {
 	std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
 	reflectInputElements(pReflection, elements);
 
-	tif(gfx.getDevice().CreateInputLayout(elements.data(), elements.size(), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
+	tif(gfx.getDevice().CreateInputLayout(elements.data(), static_cast<UINT>(elements.size()), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
 }
 
 void VertexShader::bind(Graphics& gfx) {
