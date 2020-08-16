@@ -57,3 +57,7 @@ Buffer::Buffer(
 	tif(gfx.getDevice().CreateBuffer(&desc, nullptr, &pBuffer));
 
 }
+
+ID3D11Buffer* Buffer::get() const {
+	return pBuffer.Get();
+}
