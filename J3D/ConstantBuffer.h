@@ -14,7 +14,7 @@ public:
 		Buffer(gfx, size, D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0) {}
 
 	template<typename T>
-	void set(Graphics& gfx, const T& data) {
+	void set(Graphics& gfx, const T& data) const {
 
 		D3D11_MAPPED_SUBRESOURCE mappedData;
 

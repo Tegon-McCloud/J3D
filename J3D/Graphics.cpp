@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Buffer.h"
 
+#include "Texture.h"
+
 using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace DXUtils;
@@ -29,8 +31,8 @@ Graphics::Graphics(HWND hWnd) :
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	swapChainDesc.BufferDesc.Width = 0;
 	swapChainDesc.BufferDesc.Height = 0;
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -98,6 +100,9 @@ void Graphics::render() {
 	pCamera->moveTo(XMVectorSet(0.0f, 2.0f, -4.0f, 1.0f));
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
+	
+	auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/barrel/UVTest.png"));
+	tex->bind(*this);
 
 	if (pScene) {
 		pScene->draw(*this);

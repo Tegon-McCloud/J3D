@@ -102,6 +102,9 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j3d_Window.h">
@@ -175,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="SceneLoading.h">
       <Filter>Header Files\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\DX\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\DX\Bindables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
