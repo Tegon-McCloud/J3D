@@ -57,9 +57,9 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
-	std::vector<std::byte> imgData(4 * desc.Width * desc.Height);
-	pConverter->CopyPixels(nullptr, 4, imgData.size(), reinterpret_cast<BYTE*>(imgData.data()));
-
+	std::vector<std::byte> imgData(4ui64 * desc.Width * desc.Height);
+	tif(pConverter->CopyPixels(nullptr, 4 * desc.Width, imgData.size(), reinterpret_cast<BYTE*>(imgData.data())));
+		
 	D3D11_SUBRESOURCE_DATA initDesc;
 	initDesc.pSysMem = imgData.data();
 	initDesc.SysMemPitch = desc.Width * 4;
@@ -67,6 +67,16 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 
 	tif(gfx.getDevice().CreateTexture2D(&desc, &initDesc, &pTexture));
 
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+
+	tif(gfx.getDevice().CreateShaderResourceView(pTexture.Get(), &srvDesc, &pView));
+
 }
 
-void Texture2D::bind(Graphics& gfx) {}
+void Texture2D::bind(Graphics& gfx) {
+	gfx.getContext().PSSetShaderResources(0, 1, pView.GetAddressOf());
+}

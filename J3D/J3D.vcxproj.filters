@@ -103,7 +103,7 @@
       <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

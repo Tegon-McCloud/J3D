@@ -104,6 +104,26 @@ void Graphics::render() {
 	auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/barrel/UVTest.png"));
 	tex->bind(*this);
 
+	ComPtr<ID3D11SamplerState> pSampler;
+	D3D11_SAMPLER_DESC sDesc;
+	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDesc.MipLODBias = 0;
+	sDesc.MaxAnisotropy = 1;
+	sDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	sDesc.BorderColor[0] = 0.0f;
+	sDesc.BorderColor[1] = 0.0f;
+	sDesc.BorderColor[2] = 0.0f;
+	sDesc.BorderColor[3] = 0.0f;
+	sDesc.MinLOD = 0;
+	sDesc.MaxLOD = 0;
+
+	pDevice->CreateSamplerState(&sDesc, &pSampler);
+
+	pContext->PSSetSamplers(0, 1, pSampler.GetAddressOf());
+
 	if (pScene) {
 		pScene->draw(*this);
 	}
@@ -180,7 +200,6 @@ void Graphics::windowResized() {
 	dstexDesc.MiscFlags = 0;
 	
 	pDevice->CreateTexture2D(&dstexDesc, nullptr, &dstex);
-
 
 	//D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	//dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
