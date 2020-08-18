@@ -97,11 +97,11 @@ void Graphics::render() {
 		pProjectionCBuffer->set(*this, XMMatrixTranspose(pCamera->getProjection()));
 	}
 
-	pCamera->moveTo(XMVectorSet(0.0f, 2.0f, -4.0f, 1.0f));
+	pCamera->moveTo(XMVectorSet(0.0f, 3.0f, -3.0f, 1.0f));
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
-	auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/barrel/UVTest.png"));
+	auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
 	tex->bind(*this);
 
 	ComPtr<ID3D11SamplerState> pSampler;

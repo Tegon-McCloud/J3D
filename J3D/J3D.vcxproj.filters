@@ -198,5 +198,11 @@
     <None Include="VSCBuffers.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
+    <None Include="PSUtils.hlsli">
+      <Filter>Shader Header Files</Filter>
+    </None>
+    <None Include="CommonUtils.hlsli">
+      <Filter>Shader Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

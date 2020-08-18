@@ -2,8 +2,10 @@
 
 #include "DXUtils.h"
 #include "Bindable.h"
+#include "Texture.h"
 
 #include <type_traits>
+#include <vector>
 
 class Material : public Bindable {
 public:
@@ -12,7 +14,9 @@ public:
 
 
 private:
+	bool baseColorMap, normalMap, metalRoughnessMap;
 
+	std::vector<std::shared_ptr<Texture2D>> textures;
 	
 };
 

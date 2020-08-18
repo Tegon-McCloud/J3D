@@ -65,14 +65,13 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 	std::vector<GLTF::BufferView> views;
 	std::vector<GLTF::Accessor> accessors;
 
-	json jbuffers = j.at("buffers");
-	json jviews = j.at("bufferViews");
-	json jaccessors = j.at("accessors");
-	json jmeshes = j.at("meshes");
+	const json& jbuffers = j.at("buffers");
+	const json& jviews = j.at("bufferViews");
+	const json& jaccessors = j.at("accessors");
+	const json& jmeshes = j.at("meshes");
 
 	for (auto& jbuffer : jbuffers) {
-		std::filesystem::path bufferFile = file.parent_path();
-		bufferFile.append(jbuffer.at("uri").get<std::string>());
+		std::filesystem::path bufferFile = file.parent_path().append(jbuffer.at("uri").get<std::string>());
 
 		GLTF::Buffer buffer;
 		buffer.size = jbuffer.at("byteLength").get<size_t>();

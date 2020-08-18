@@ -1,0 +1,151 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.1.46",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "anvil"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                0,
+                0,
+                0
+            ],
+            "name" : "anvil_material",
+            "normalTexture" : {
+                "index" : 0,
+                "scale" : 1.0000009536743164,
+                "texCoord" : 0
+            },
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.4063844680786133,
+                    0.4063844680786133,
+                    0.4063844680786133,
+                    1
+                ],
+                "metallicFactor" : 1,
+                "roughnessFactor" : 0.41818180680274963
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TANGENT" : 2,
+                        "TEXCOORD_0" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "source" : 0
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "anvil_normal",
+            "uri" : "anvil_normal.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 18479,
+            "max" : [
+                2.8661563396453857,
+                2.5322628021240234,
+                1.5469704866409302
+            ],
+            "min" : [
+                -3.6569910049438477,
+                0.0012624859809875488,
+                -1.5465322732925415
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 18479,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 18479,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 18479,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 91968,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 221748,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 221748,
+            "byteOffset" : 221748
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 295664,
+            "byteOffset" : 443496
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 147832,
+            "byteOffset" : 739160
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 183936,
+            "byteOffset" : 886992
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1070928,
+            "uri" : "anvil.bin"
+        }
+    ]
+}

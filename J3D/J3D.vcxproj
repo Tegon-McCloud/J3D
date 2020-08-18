@@ -190,6 +190,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CommonUtils.hlsli" />
+    <None Include="PSUtils.hlsli" />
     <None Include="VSCBuffers.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
