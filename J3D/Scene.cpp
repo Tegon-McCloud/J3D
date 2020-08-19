@@ -223,8 +223,10 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :
 
 		mesh.addBindable(pVB);
 		mesh.addBindable(pIB);
-		mesh.addBindable(gfx.getBindableMgr().resolve<VertexShader>("./Shaders/VertexShader.cso", "./Shaders/VertexShader.cso"));
-		mesh.addBindable(gfx.getBindableMgr().resolve<PixelShader>("./Shaders/PixelShader.cso", "./Shaders/PixelShader.cso"));
+		mesh.addBindable(gfx.getBindableMgr().resolve<VertexShader>("VS",
+			std::filesystem::path("./VertexShader.hlsl")));
+		mesh.addBindable(gfx.getBindableMgr().resolve<PixelShader>("PSColorMap",
+			std::filesystem::path("./PixelShader.hlsl"), true, false));
 	}
 	
 	auto& jnodes = j.at("nodes");

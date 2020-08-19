@@ -201,7 +201,7 @@
       <Filter>Header Files\DX\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Lighting.h">
-      <Filter>Source Files\DX</Filter>
+      <Filter>Header Files\DX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

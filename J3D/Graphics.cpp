@@ -87,7 +87,7 @@ Graphics::~Graphics() {
 
 void Graphics::render() {
 	
-	const float rgba[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+	const float rgba[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	pContext->ClearRenderTargetView(pRTV.Get(), rgba);
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), pDSV.Get());
@@ -98,7 +98,7 @@ void Graphics::render() {
 		pProjectionCBuffer->set(*this, XMMatrixTranspose(pCamera->getProjection()));
 	}
 
-	pCamera->moveTo(XMVectorSet(0.0f, 3.0f, -3.0f, 1.0f));
+	pCamera->moveTo(XMVectorSet(0.0f, 4.0f, -4.0f, 1.0f));
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
