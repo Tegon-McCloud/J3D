@@ -26,3 +26,25 @@ JNIEXPORT void JNICALL Java_j3d_Scene_close(JNIEnv* env, jobject jthis) {
 	Scene* pScene = getNative<Scene>(env, jthis);
 	delete pScene;
 }
+
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getRootNodeHandle(JNIEnv* env, jobject jthis) {
+	Scene* pScene = getNative<Scene>(env, jthis);
+	return reinterpret_cast<jlong>(pScene->getRoot());
+}
+
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getNodeHandle__Ljava_lang_String_2(JNIEnv* env, jobject jthis, jstring jname) {
+	Scene* pScene = getNative<Scene>(env, jthis);
+
+	jboolean isCopy;
+	const char* utfName = env->GetStringUTFChars(jname, &isCopy);
+	std::string name(utfName);
+	SceneNode* pNode = pScene->getNode(name);
+	env->ReleaseStringUTFChars(jname, utfName);
+	
+	return reinterpret_cast<jlong>(pNode);
+}
+
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getNodeHandle__I(JNIEnv* env, jobject jthis, jint jindex) {
+	Scene* pScene = getNative<Scene>(env, jthis);
+	return reinterpret_cast<jlong>(pScene->getNode(jindex));
+}

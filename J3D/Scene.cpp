@@ -15,13 +15,13 @@
 
 using namespace DirectX;
 
-SceneNode::SceneNode() : pParent(nullptr), pMesh(nullptr), transform() {
-	XMStoreFloat4x4(&transform, XMMatrixIdentity());
+SceneNode::SceneNode() : pParent(nullptr), pMesh(nullptr), parentToThis() {
+	XMStoreFloat4x4(&parentToThis, XMMatrixIdentity());
 }
 
 void SceneNode::draw(Graphics& gfx, DirectX::FXMMATRIX parentTransform) {
 	
-	XMMATRIX accumulated = XMMatrixMultiply(parentTransform, XMLoadFloat4x4(&transform));
+	XMMATRIX accumulated = XMMatrixMultiply(parentTransform, XMLoadFloat4x4(&parentToThis));
 
 	for (auto pChild : children) {
 		pChild->draw(gfx, accumulated);
@@ -51,6 +51,19 @@ void SceneNode::clear() {
 
 void SceneNode::setMesh(Mesh* pMesh) {
 	this->pMesh = pMesh;
+}
+
+void SceneNode::transform(DirectX::FXMMATRIX transform) {
+
+	 
+	XMStoreFloat4x4(
+		&parentToThis,
+		XMMatrixMultiply(
+			XMLoadFloat4x4(&parentToThis),
+			transform
+		)
+	);
+
 }
 
 Scene::Scene(Graphics& gfx, const std::filesystem::path& file) :

@@ -17,8 +17,10 @@ public:
 
 	void setMesh(Mesh* pMesh);
 
+	void transform(DirectX::FXMMATRIX transform);
+
 private:
-	DirectX::XMFLOAT4X4 transform;
+	DirectX::XMFLOAT4X4 parentToThis;
 	SceneNode* pParent;
 	std::vector<SceneNode*> children;
 	Mesh* pMesh;

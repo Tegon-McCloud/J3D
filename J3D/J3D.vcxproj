@@ -130,6 +130,7 @@
     <ClInclude Include="BindableManager.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="j3d_SceneNode.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DXUtils.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneLoading.h" />
     <ClInclude Include="Shader.h" />
@@ -163,11 +165,13 @@
     <ClCompile Include="j3d_Keyboard.cpp" />
     <ClCompile Include="j3d_Mouse.cpp" />
     <ClCompile Include="j3d_Scene.cpp" />
+    <ClCompile Include="j3d_SceneNode.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="j3d_Window.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneLoading.cpp" />
     <ClCompile Include="Shader.cpp" />

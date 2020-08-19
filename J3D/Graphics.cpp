@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Buffer.h"
+#include "Sampler.h"
 
 #include "Texture.h"
 
@@ -101,28 +102,11 @@ void Graphics::render() {
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
-	auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
+	static auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
 	tex->bind(*this);
 
-	ComPtr<ID3D11SamplerState> pSampler;
-	D3D11_SAMPLER_DESC sDesc;
-	sDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-	sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDesc.MipLODBias = 0;
-	sDesc.MaxAnisotropy = 1;
-	sDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
-	sDesc.BorderColor[0] = 0.0f;
-	sDesc.BorderColor[1] = 0.0f;
-	sDesc.BorderColor[2] = 0.0f;
-	sDesc.BorderColor[3] = 0.0f;
-	sDesc.MinLOD = 0;
-	sDesc.MaxLOD = 0;
-
-	pDevice->CreateSamplerState(&sDesc, &pSampler);
-
-	pContext->PSSetSamplers(0, 1, pSampler.GetAddressOf());
+	static auto pSampler = bindableManager.resolve<PSSampler>("yay", 0);
+	pSampler->bind(*this);
 
 	if (pScene) {
 		pScene->draw(*this);

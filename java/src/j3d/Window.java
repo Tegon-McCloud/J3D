@@ -44,10 +44,8 @@ public class Window {
 	public static native boolean poll();
 
 	public static void test() {
-		
-		Window wnd;
-		
-		wnd = new Window(1080, 720, "test window");
+
+		Window wnd = new Window(1080, 720, "test window");
 
 		Keyboard kbd = wnd.getKeyboard();
 		Mouse mouse = wnd.getMouse();
@@ -59,16 +57,27 @@ public class Window {
 		KeyEvent keyEvent;
 		MouseEvent mouseEvent;
 
-		while(!poll()) {
+		SceneNode anvilNode = scene.getNode("anvil");
+
+		long t0 = System.currentTimeMillis();
+		long t1;
+		long dt;
+
+		while(!Window.poll()) {
 
 			while((keyEvent = kbd.nextEvent()) != null) {
 				
 			}
-
+			
 			while((mouseEvent = mouse.nextEvent()) != null) {
-				
+
 			}
 
+			t1 = System.currentTimeMillis();
+			dt = t1 - t0;
+			t0 = t1;
+			
+			anvilNode.rotateY(dt / 1000.0f);	
 			gfx.render();
 
 		}

@@ -23,6 +23,30 @@ JNIEXPORT jlong JNICALL Java_j3d_Scene_init
 JNIEXPORT void JNICALL Java_j3d_Scene_close
   (JNIEnv *, jobject);
 
+/*
+ * Class:     j3d_Scene
+ * Method:    getRootNodeHandle
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getRootNodeHandle
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     j3d_Scene
+ * Method:    getNodeHandle
+ * Signature: (Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getNodeHandle__Ljava_lang_String_2
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     j3d_Scene
+ * Method:    getNodeHandle
+ * Signature: (I)J
+ */
+JNIEXPORT jlong JNICALL Java_j3d_Scene_getNodeHandle__I
+  (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif
