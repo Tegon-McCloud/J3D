@@ -70,7 +70,7 @@ public class Window {
 			}
 			
 			while((mouseEvent = mouse.nextEvent()) != null) {
-
+				
 			}
 
 			t1 = System.currentTimeMillis();
@@ -79,7 +79,6 @@ public class Window {
 			
 			anvilNode.rotateY(dt / 1000.0f);	
 			gfx.render();
-
 		}
 
 		wnd.close();

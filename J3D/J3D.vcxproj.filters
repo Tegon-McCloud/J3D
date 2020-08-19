@@ -111,6 +111,9 @@
     <ClCompile Include="j3d_SceneNode.cpp">
       <Filter>Source Files\JNI</Filter>
     </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j3d_Window.h">
@@ -195,7 +198,10 @@
       <Filter>Header Files\JNI</Filter>
     </ClInclude>
     <ClInclude Include="Sampler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DX\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Source Files\DX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

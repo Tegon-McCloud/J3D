@@ -3,6 +3,8 @@
 #include "Mesh.h"
 
 #include <vector>
+#include "Lighting.h"
+
 #include <unordered_map>
 #include <filesystem>
 

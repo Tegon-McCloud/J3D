@@ -8,8 +8,8 @@ typedef struct {
 
 typedef struct {
     float3 viewPos : POSITION;
-    float3 normal : NORMAL;
-    float3 tangent : TANGENT;
     float2 texCoord : TEXCOORD;
+    float3x3 tbn : TBN;
     float4 pos : SV_POSITION;
+
 } VSOutput, PSInput;

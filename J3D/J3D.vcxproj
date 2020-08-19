@@ -131,6 +131,7 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="j3d_SceneNode.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DXUtils.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="j3d_Window.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Sampler.cpp" />
