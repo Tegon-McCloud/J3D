@@ -38,10 +38,23 @@ namespace GLTF {
 		DXUtils::Format format;
 
 		void copyTo(std::byte* pDst, size_t dstOffset, size_t dstStride);
+	};
 
+	struct Image {
+		std::filesystem::path file;
+	};
+
+	struct Sampler {
+		D3D11_TEXTURE_ADDRESS_MODE uMode, vMode;
+	};
+
+	struct Texture {
+		Image* pImage;
+		Sampler* pSampler;
 	};
 	
 	DXUtils::Format getFormat(const std::string& gltfType, uint64_t gltfComponentType);
+	D3D11_TEXTURE_ADDRESS_MODE getAddressMode(uint64_t gltfAddressMode);
 
 }
 

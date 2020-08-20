@@ -102,10 +102,10 @@ void Graphics::render() {
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
-	static auto tex = bindableManager.resolve<Texture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
+	auto tex = bindableManager.resolve<PSTexture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"), 0);
 	tex->bind(*this);
 
-	static auto pSampler = bindableManager.resolve<PSSampler>("yay", 0);
+	auto pSampler = bindableManager.resolve<PSSampler>("yay", 0);
 	pSampler->bind(*this);
 
 	if (pScene) {

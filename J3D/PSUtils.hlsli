@@ -1,24 +1,35 @@
+// Material cbuffer
+struct Material {
+    float4 baseColor;
+    float metallic;
+    float roughness;
+};
 
+cbuffer material : register(b0) {
+    Material material;
+};
+
+// texture declarations
 float4 getColor(in float2 texcoords);
 
 #ifdef COLOR_MAP
-Texture2D colorMap;
-SamplerState colorSampler;
+Texture2D colorMap : register(t0);
+SamplerState colorSampler : register(s0);
 
 float4 getColor(in float2 texcoords) {
     return colorMap.Sample(colorSampler, texcoords);
 }
 #else
 float4 getColor(in float2 texcoords) {
-    return 1.0f.rrrr;
+    return material.baseColor;
 }
 #endif
 
 float3 getNormal(in float2 texcoord, in float3x3 tbn);
 
 #ifdef NORMAL_MAP
-Texture2D normalMap;
-SamplerState normalSampler;
+Texture2D normalMap : register(t1);
+SamplerState normalSampler : register(s1);
 
 float3 getNormal(in float2 texcoord, in float3x3 tbn) {
     float3 normal = normalMap.Sample(normalSampler, texcoord).xyz;
@@ -32,7 +43,4 @@ float3 getNormal(in float2 texcoord, in float3x3 tbn) {
 }
 #endif
 
-#ifdef METAL_ROUGHNESS_MAP
-Texture2D metalRoughnessMap;
-#endif
 

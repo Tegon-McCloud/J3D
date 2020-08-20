@@ -20,15 +20,25 @@ Sampler::Sampler(Graphics& gfx, uint8_t slot) : slot(slot) {
 	desc.MaxLOD = 0;
 
 	tif(gfx.getDevice().CreateSamplerState(&desc, &pSampler));
+}
 
-
+void Sampler::setSlot(uint8_t slot) {
+	this->slot = slot;
 }
 
 void VSSampler::bind(Graphics& gfx) {
 	gfx.getContext().VSSetSamplers(slot, 1, pSampler.GetAddressOf());
 }
 
+void VSSampler::bind(Graphics& gfx, uint8_t slot) {
+	gfx.getContext().VSSetSamplers(slot, 1, pSampler.GetAddressOf());
+}
+
 void PSSampler::bind(Graphics& gfx) {
+	gfx.getContext().PSSetSamplers(slot, 1, pSampler.GetAddressOf());
+}
+
+void PSSampler::bind(Graphics& gfx, uint8_t slot) {
 	gfx.getContext().PSSetSamplers(slot, 1, pSampler.GetAddressOf());
 }
 

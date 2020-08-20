@@ -12,7 +12,7 @@ public class Scene {
     }
 
     private native long init(Graphics gfx, String file);
-    private native void close();
+    public native void close();
 
     SceneNode getRootNode() {
         return new SceneNode(getRootNodeHandle());
@@ -29,4 +29,5 @@ public class Scene {
     private native long getRootNodeHandle();
     private native long getNodeHandle(String name);
     private native long getNodeHandle(int index);
+
 }

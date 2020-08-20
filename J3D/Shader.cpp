@@ -189,7 +189,7 @@ HRESULT __stdcall ShaderCompiler::Include::Open(D3D_INCLUDE_TYPE IncludeType, LP
 		}
 
 		return S_OK;
-	} catch (std::exception& e) {
+	} catch (...) {
 		return E_FAIL;
 	}
 }

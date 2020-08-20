@@ -43,8 +43,6 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 
 	tif(pConverter->Initialize(pDecode.Get(), GUID_WICPixelFormat32bppRGBA, WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom));
 
-	
-
 	D3D11_TEXTURE2D_DESC desc;
 	tif(pConverter->GetSize(&desc.Width, &desc.Height));
 	desc.MipLevels = 1;
@@ -67,6 +65,12 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 
 	tif(gfx.getDevice().CreateTexture2D(&desc, &initDesc, &pTexture));
 
+}
+
+ShaderTexture2D::ShaderTexture2D(Graphics& gfx, const std::filesystem::path& file, uint8_t slot) :
+	Texture2D(gfx, file),
+	slot(slot) {
+
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -74,9 +78,24 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 	srvDesc.Texture2D.MostDetailedMip = 0;
 
 	tif(gfx.getDevice().CreateShaderResourceView(pTexture.Get(), &srvDesc, &pView));
-
 }
 
-void Texture2D::bind(Graphics& gfx) {
-	gfx.getContext().PSSetShaderResources(0, 1, pView.GetAddressOf());
+void ShaderTexture2D::setSlot(uint8_t slot) {
+	this->slot = slot;
+}
+
+void PSTexture2D::bind(Graphics& gfx) {
+	gfx.getContext().PSSetShaderResources(slot, 1, pView.GetAddressOf());
+}
+
+void PSTexture2D::bind(Graphics& gfx, uint8_t slot) {
+	gfx.getContext().PSSetShaderResources(slot, 1, pView.GetAddressOf());
+}
+
+void VSTexture2D::bind(Graphics& gfx) {
+	gfx.getContext().VSSetShaderResources(slot, 1, pView.GetAddressOf());
+}
+
+void VSTexture2D::bind(Graphics& gfx, uint8_t slot) {
+	gfx.getContext().VSSetShaderResources(slot, 1, pView.GetAddressOf());
 }

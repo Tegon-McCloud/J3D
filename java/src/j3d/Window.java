@@ -80,7 +80,7 @@ public class Window {
 			anvilNode.rotateY(dt / 1000.0f);	
 			gfx.render();
 		}
-
+		scene.close();
 		wnd.close();
 	}
 	public static void main(String[] args) {

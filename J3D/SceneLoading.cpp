@@ -62,3 +62,16 @@ DXUtils::Format GLTF::getFormat(const std::string& gltfType, uint64_t gltfCompon
 
 	return DXUtils::Format(typeMap.at(gltfType), componentTypeMap.at(gltfComponentType));
 }
+
+D3D11_TEXTURE_ADDRESS_MODE GLTF::getAddressMode(uint64_t gltfAddressMode) {
+	switch (gltfAddressMode) {
+	case 33071:
+		return D3D11_TEXTURE_ADDRESS_CLAMP;
+	case 33648:
+		return D3D11_TEXTURE_ADDRESS_MIRROR;
+	case 10497:
+		return D3D11_TEXTURE_ADDRESS_WRAP;
+	default:
+		throw std::runtime_error("Unknown gltf texture address mode: " + gltfAddressMode);
+	}
+}
