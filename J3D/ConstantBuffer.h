@@ -3,6 +3,7 @@
 #include "DXUtils.h"
 #include "Buffer.h"
 #include "Graphics.h"
+#include "Bindable.h"
 
 #include <type_traits>
 

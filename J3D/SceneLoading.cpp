@@ -1,7 +1,5 @@
 #include "SceneLoading.h"
 
-#include <json.hpp>
-
 #include "Graphics.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -11,7 +9,6 @@
 #include <filesystem>
 
 using namespace GLTF;
-using nlohmann::json;
 
 GLTF::Buffer::Buffer() : size(0) {}
 

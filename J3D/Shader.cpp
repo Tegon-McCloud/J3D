@@ -25,7 +25,7 @@ inline void reflectConstantBuffers(
 		tif(pBufferReflection->GetDesc(&bufferDesc));
 		tif(pReflection->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc));
 
-		std::shared_ptr<T> pCBuffer = gfx.getBindableMgr().resolve<T>(bufferDesc.Name, bufferDesc.Size, bindDesc.BindPoint);
+		std::shared_ptr<T> pCBuffer = gfx.getResourceMgr<T>().resolve(bufferDesc.Name, bufferDesc.Size, bindDesc.BindPoint);
 		constantBuffers.emplace(bufferDesc.Name, pCBuffer);
 	}
 }
@@ -183,7 +183,7 @@ HRESULT __stdcall ShaderCompiler::Include::Open(D3D_INCLUDE_TYPE IncludeType, LP
 			ifs.close();
 
 			*ppData = buffer;
-			*pBytes = fileSize;
+			*pBytes = static_cast<UINT>(fileSize);
 		} else {
 			return E_FAIL;
 		}

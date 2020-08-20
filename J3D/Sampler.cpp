@@ -2,12 +2,11 @@
 
 #include "Graphics.h"
 
-
-Sampler::Sampler(Graphics& gfx, uint8_t slot) : slot(slot) {
+Sampler::Sampler(Graphics& gfx, D3D11_TEXTURE_ADDRESS_MODE uMode, D3D11_TEXTURE_ADDRESS_MODE vMode, uint8_t slot) : slot(slot) {
 	D3D11_SAMPLER_DESC desc;
 	desc.Filter = D3D11_FILTER_ANISOTROPIC;
-	desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	desc.AddressU = uMode;
+	desc.AddressV = vMode;
 	desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	desc.MipLODBias = 0;
 	desc.MaxAnisotropy = 1;
@@ -20,10 +19,6 @@ Sampler::Sampler(Graphics& gfx, uint8_t slot) : slot(slot) {
 	desc.MaxLOD = 0;
 
 	tif(gfx.getDevice().CreateSamplerState(&desc, &pSampler));
-}
-
-void Sampler::setSlot(uint8_t slot) {
-	this->slot = slot;
 }
 
 void VSSampler::bind(Graphics& gfx) {

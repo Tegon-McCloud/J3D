@@ -2,7 +2,6 @@
 
 class Graphics;
 
-#include "Bindable.h"
 #include "Util.h"
 
 #include <memory>
@@ -11,67 +10,64 @@ class Graphics;
 #include <type_traits>
 #include <typeindex>
 
-class BindableManager {
-	friend class Graphics;
+class ResourceManagerBase {
+public:
+	ResourceManagerBase(Graphics& gfx) : owner(gfx) {};
+	ResourceManagerBase(const ResourceManagerBase&) = delete;
+	ResourceManagerBase& operator=(const ResourceManagerBase&) = delete;
+
 
 private:
-	BindableManager(Graphics& gfx) : owner(gfx) {};
+	// allow for dynamic_cast
+	virtual void makeTypePolymophic() {};
 
+protected:
+	
+	Graphics& owner;
+};
+
+template<typename Resource>
+class ResourceManager : public ResourceManagerBase {
 public:
+	ResourceManager(Graphics& gfx) : ResourceManagerBase(gfx) {}
+	
+	std::shared_ptr<Resource> get(const std::string& name) {
+		auto it = resourceMap.find(name);
 
-	template<typename T>
-	inline std::shared_ptr<T> get(const std::string& name) {
-		static_assert(std::is_base_of<Bindable, T>::value);
+		std::shared_ptr<Resource> shared;
 
-		if constexpr (!T::Reusable::value) {
-			return nullptr;
-		}
-
-		auto it = bindables.find({ typeid(T), name });
-
-		std::shared_ptr<T> shared;
-
-		if (it != bindables.end() && (shared = std::dynamic_pointer_cast<T>(it->second.lock()))) {
+		if (it != resourceMap.end() && (shared = it->second.lock())) {
 			return shared;
 		}
 
 		return nullptr;
-
 	}
 
+	template<typename... Args>
+	std::shared_ptr<Resource> resolve(const std::string& name, Args&&... args) {
 
-	template<typename T, typename... Args>
-	inline std::shared_ptr<T> resolve(const std::string& name, Args&&... args) {
-
-		static_assert(std::is_base_of<Bindable, T>::value);
-
-		if constexpr (!T::Reusable::value) {
-			return std::make_shared<T>(owner, std::forward<Args>(args)...);
+		if constexpr (!Resource::Reusable::value) {
+			return std::make_shared<Resource>(owner, std::forward<Args>(args)...);
 		}
-		 
+
 		if (name == "") {
-			return std::make_shared<T>(owner, std::forward<Args>(args)...);
+			return std::make_shared<Resource>(owner, std::forward<Args>(args)...);
 		}
 
-		decltype(bindables)::iterator it = bindables.find({ typeid(T), name });
+		auto it = resourceMap.find(name);
 
-		std::shared_ptr<T> shared;
+		std::shared_ptr<Resource> shared;
 
-		if (it != bindables.end() && (shared = std::static_pointer_cast<T>(it->second.lock()))) {
+		if (it != resourceMap.end() && (shared = it->second.lock())) {
 			return shared;
 		}
 
-		shared = std::make_shared<T>(owner, std::forward<Args>(args)...);
-		bindables[{ typeid(T), name }] = shared;
+		shared = std::make_shared<Resource>(owner, std::forward<Args>(args)...);
+		resourceMap[name] = shared;
 
 		return shared;
 	}
 
-
 private:
-	Graphics& owner;
-
-	std::unordered_map<std::pair<std::type_index, std::string>, std::weak_ptr<Bindable>, hash_pair> bindables;
-
+	std::unordered_map<std::string, std::weak_ptr<Resource>> resourceMap;
 };
-

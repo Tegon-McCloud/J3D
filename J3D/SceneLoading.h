@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <cstddef>
+#include <string>
 
 
 namespace GLTF {
@@ -42,6 +43,7 @@ namespace GLTF {
 
 	struct Image {
 		std::filesystem::path file;
+		std::string name;
 	};
 
 	struct Sampler {

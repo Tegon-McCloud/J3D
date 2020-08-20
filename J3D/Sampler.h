@@ -7,7 +7,7 @@ class Graphics;
 
 class Sampler : public Bindable {
 public:
-	Sampler(Graphics& gfx, uint8_t slot = 0);
+	Sampler(Graphics& gfx, D3D11_TEXTURE_ADDRESS_MODE uMode, D3D11_TEXTURE_ADDRESS_MODE vMode, uint8_t slot = 0);
 
 	virtual void bind(Graphics& gfx, uint8_t slot) = 0;
 

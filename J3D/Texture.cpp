@@ -56,7 +56,7 @@ Texture2D::Texture2D(Graphics& gfx, const std::filesystem::path& file) {
 	desc.MiscFlags = 0;
 
 	std::vector<std::byte> imgData(4ui64 * desc.Width * desc.Height);
-	tif(pConverter->CopyPixels(nullptr, 4 * desc.Width, imgData.size(), reinterpret_cast<BYTE*>(imgData.data())));
+	tif(pConverter->CopyPixels(nullptr, 4 * desc.Width, static_cast<UINT>(imgData.size()), reinterpret_cast<BYTE*>(imgData.data())));
 		
 	D3D11_SUBRESOURCE_DATA initDesc;
 	initDesc.pSysMem = imgData.data();
@@ -78,10 +78,6 @@ ShaderTexture2D::ShaderTexture2D(Graphics& gfx, const std::filesystem::path& fil
 	srvDesc.Texture2D.MostDetailedMip = 0;
 
 	tif(gfx.getDevice().CreateShaderResourceView(pTexture.Get(), &srvDesc, &pView));
-}
-
-void ShaderTexture2D::setSlot(uint8_t slot) {
-	this->slot = slot;
 }
 
 void PSTexture2D::bind(Graphics& gfx) {

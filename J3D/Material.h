@@ -11,14 +11,14 @@ class Graphics;
 #include <array>
 
 struct MaterialConstants {
-	float r, g, b, a;
+	float color[4];
 	float metallic, roughness;
 };
 
 class Material : public Bindable {
 public:
 	using Reusable = std::false_type;
-	Material(const MaterialConstants& constants);
+	Material(Graphics& gfx, const MaterialConstants& constants);
 
 	void setColorMap(std::shared_ptr<ShaderTexture2D> pTexture, std::shared_ptr<Sampler> pSampler);
 	void setNormalMap(std::shared_ptr<ShaderTexture2D> pTexture, std::shared_ptr<Sampler> pSampler);

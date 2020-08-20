@@ -14,7 +14,6 @@ using namespace DXUtils;
 
 
 Graphics::Graphics(HWND hWnd) : 
-	bindableManager(*this),
 	pScene(nullptr),
 	pCamera(std::make_unique<Camera>()) {
 
@@ -93,7 +92,7 @@ void Graphics::render() {
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), pDSV.Get());
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	auto pProjectionCBuffer = bindableManager.get<VSConstantBuffer>("projection"); 
+	auto pProjectionCBuffer = getResourceMgr<VSConstantBuffer>().get("projection"); 
 	if (pProjectionCBuffer) {
 		pProjectionCBuffer->set(*this, XMMatrixTranspose(pCamera->getProjection()));
 	}
@@ -102,10 +101,10 @@ void Graphics::render() {
 	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
-	auto tex = bindableManager.resolve<PSTexture2D>("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"), 0);
+	auto tex = getResourceMgr<PSTexture2D>().resolve("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"), 0);
 	tex->bind(*this);
 
-	auto pSampler = bindableManager.resolve<PSSampler>("yay", 0);
+	auto pSampler = getResourceMgr<PSSampler>().resolve("yay", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP);
 	pSampler->bind(*this);
 
 	if (pScene) {
@@ -127,10 +126,6 @@ ID3D11Device5& Graphics::getDevice() const {
 
 ID3D11DeviceContext4& Graphics::getContext() const {
 	return **(pContext.GetAddressOf());
-}
-
-BindableManager& Graphics::getBindableMgr() {
-	return bindableManager;
 }
 
 Camera& Graphics::getCamera() {

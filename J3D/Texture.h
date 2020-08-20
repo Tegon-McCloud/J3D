@@ -8,7 +8,6 @@ class Graphics;
 #include <filesystem>
 
 class Texture2D {
-
 public:
 	Texture2D(Graphics& gfx, const std::filesystem::path& file);
 	
