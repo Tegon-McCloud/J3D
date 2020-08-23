@@ -78,12 +78,14 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 	std::vector<std::shared_ptr<Material>> materials;
 
 	for (size_t i = 0; i < pAiScene->mNumMaterials; i++) {
+		aiMaterial& aiMat = *pAiScene->mMaterials[i];
+
 		MaterialConstants matConsts;
 		
 		aiColor4D color(0.0f, 0.0f, 0.0f, 0.0f);
-		if (pAiScene->mMaterials[i]->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR, color) != AI_SUCCESS ||
-			pAiScene->mMaterials[i]->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, matConsts.metallic) != AI_SUCCESS ||
-			pAiScene->mMaterials[i]->Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, matConsts.roughness) != AI_SUCCESS) {
+		if (aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR, color) != AI_SUCCESS ||
+			aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, matConsts.metallic) != AI_SUCCESS ||
+			aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, matConsts.roughness) != AI_SUCCESS) {
 			throw std::runtime_error("");
 		}
 
@@ -91,10 +93,27 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 		matConsts.color[1] = color.g;
 		matConsts.color[2] = color.b;
 		matConsts.color[3] = color.a;
-		
-		materials.push_back(gfx.getResourceMgr<Material>().resolve("", matConsts));
 
-		std::cout << pAiScene->mMaterials[i]->GetName().C_Str();
+		std::shared_ptr<Material> pMaterial = gfx.getResourceMgr<Material>().resolve("", matConsts);
+		
+		aiString colorTexFile;
+		if (aiMat.GetTexture(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE, &colorTexFile) == AI_SUCCESS) {
+			std::filesystem::path fullPath = file.parent_path() / colorTexFile.C_Str();
+			pMaterial->setColorMap(gfx.getResourceMgr<PSTexture2D>().resolve(fullPath.generic_string(), fullPath),
+				gfx.getResourceMgr<PSSampler>().resolve("default", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP));
+		}
+
+		aiString normalTexFile;
+		if (aiMat.GetTexture(aiTextureType_NORMALS, 0, &normalTexFile) == AI_SUCCESS) {
+			std::filesystem::path fullPath = file.parent_path() / normalTexFile.C_Str();
+			pMaterial->setNormalMap(gfx.getResourceMgr<PSTexture2D>().resolve(fullPath.generic_string(), fullPath), 
+				gfx.getResourceMgr<PSSampler>().resolve("default", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP));
+		}
+
+		materials.push_back(pMaterial);
+
+		
+
 	}
 
 

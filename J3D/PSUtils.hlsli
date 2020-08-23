@@ -73,15 +73,17 @@ float2 getMetalnessRoughness(in float2 texcoord) {
 // normal
 
 #ifdef NORMAL_MAP
-Texture2D normalMap : register(t1);
-SamplerState normalSampler : register(s1);
+Texture2D normalMap : register(CONCAT(t, NORMAL_MAP_SLOT));
+SamplerState normalSampler : register(CONCAT(s, NORMAL_SAMPLER_SLOT));
 #endif
 
 float3 getNormal(in float2 texcoord, in float3x3 tbn) {
 #ifdef NORMAL_MAP
     float3 normal = normalMap.Sample(normalSampler, texcoord).xyz;
+    normal.y = 1.0f - normal.y;
     normal *= 2.0f;
     normal -= 1.0f.xxx;
+    
     return normalize(mul(normal, tbn));
 #else
     return normalize(mul(float3(0.0f, 0.0f, 1.0f), tbn));
