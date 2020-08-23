@@ -115,7 +115,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +217,11 @@
     <None Include="CommonUtils.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
-    <None Include="PixelShader.hlsl" />
-    <None Include="VertexShader.hlsl" />
+    <None Include="PixelShader.hlsl">
+      <Filter>Shader Source Files</Filter>
+    </None>
+    <None Include="VertexShader.hlsl">
+      <Filter>Shader Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

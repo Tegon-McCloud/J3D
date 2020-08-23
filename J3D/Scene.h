@@ -17,7 +17,7 @@ public:
 	void move(SceneNode* pNewParent);
 	void clear();
 
-	void setMesh(Mesh* pMesh);
+	void addMesh(Mesh* pMesh);
 
 	void transform(DirectX::FXMMATRIX transform);
 
@@ -25,7 +25,7 @@ private:
 	DirectX::XMFLOAT4X4 parentToThis;
 	SceneNode* pParent;
 	std::vector<SceneNode*> children;
-	Mesh* pMesh;
+	std::vector<Mesh*> meshes;
 };
 
 class Scene {
@@ -47,6 +47,6 @@ private:
 
 	std::unordered_map<std::string, SceneNode*> nodeNames;
 	std::unordered_map<std::string, Mesh*> meshNames;
+	Lighting lighting;
 
-	class Graphics& gfx;
 };

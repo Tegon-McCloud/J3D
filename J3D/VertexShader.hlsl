@@ -12,7 +12,9 @@ VSOutput main( VSInput input ) {
     float3 bitangent = cross(normal, tangent);
     output.tbn = float3x3(tangent, bitangent, normal);
 
-    output.texCoords = input.texCoords;
+    output.texCoords.r = input.texCoords.r;
+    output.texCoords.g = -input.texCoords.g;
+    
     output.pos = mul(float4(output.viewPos, 1.0f), projection);
     
     return output;

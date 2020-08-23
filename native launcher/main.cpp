@@ -15,7 +15,11 @@ JNIEnv* env;
 void createJVM() {
 
 	char optionStrings[1][256] = {
+#ifdef _DEBUG
 		"-Djava.class.path=..\\x64\\Debug\\J3D.jar"
+#else
+		"-Djava.class.path=..\\x64\\Release\\J3D.jar"
+#endif
 	};
 
 	JavaVMOption jvmOptions[1];

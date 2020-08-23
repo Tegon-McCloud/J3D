@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Buffer.h"
 #include "Sampler.h"
+#include "Lighting.h"
 
 #include "Texture.h"
 
@@ -98,14 +99,46 @@ void Graphics::render() {
 	}
 
 	pCamera->moveTo(XMVectorSet(0.0f, 4.0f, -4.0f, 1.0f));
-	pCamera->lookAt(XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
+	pCamera->lookAt(XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	pCamera->updateView();
 	
-	auto tex = getResourceMgr<PSTexture2D>().resolve("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"), 0);
-	tex->bind(*this);
+	//static auto tex = getResourceMgr<PSTexture2D>().resolve("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
+	//tex->bind(*this, 0);
 
-	auto pSampler = getResourceMgr<PSSampler>().resolve("yay", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP);
-	pSampler->bind(*this);
+	//static auto pSampler = getResourceMgr<PSSampler>().resolve("yay", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP);
+	//pSampler->bind(*this, 0);
+
+	DirectionalLight light;
+	light.color = { 1.0f, 1.0f, 1.0 };
+	DirectX::XMStoreFloat3(&light.direction, XMVector3Normalize(
+		XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f)));
+
+	ComPtr<ID3D11Buffer> lightBuffer;
+	ComPtr<ID3D11ShaderResourceView> lightView;
+
+	D3D11_BUFFER_DESC desc;
+	desc.ByteWidth = sizeof(DirectionalLight);
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	desc.StructureByteStride = sizeof(DirectionalLight);
+
+	D3D11_SUBRESOURCE_DATA dataDesc;
+	dataDesc.pSysMem = &light;
+	dataDesc.SysMemPitch = 0;
+	dataDesc.SysMemSlicePitch = 0;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+	viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	viewDesc.Buffer.ElementOffset = 0;
+	viewDesc.Buffer.NumElements = 1;
+
+	tif(pDevice->CreateBuffer(&desc, &dataDesc, &lightBuffer));
+	tif(pDevice->CreateShaderResourceView(lightBuffer.Get(), &viewDesc, &lightView));
+
+	pContext->PSSetShaderResources(0, 1, lightView.GetAddressOf());
 
 	if (pScene) {
 		pScene->draw(*this);

@@ -24,9 +24,12 @@ inline void reflectConstantBuffers(
 
 		tif(pBufferReflection->GetDesc(&bufferDesc));
 		tif(pReflection->GetResourceBindingDescByName(bufferDesc.Name, &bindDesc));
+		
+		if (bindDesc.Type == D3D_SIT_CBUFFER) {
+			std::shared_ptr<T> pCBuffer = gfx.getResourceMgr<T>().resolve(bufferDesc.Name, bufferDesc.Size, bindDesc.BindPoint);
+			constantBuffers.emplace(bufferDesc.Name, pCBuffer);
+		}
 
-		std::shared_ptr<T> pCBuffer = gfx.getResourceMgr<T>().resolve(bufferDesc.Name, bufferDesc.Size, bindDesc.BindPoint);
-		constantBuffers.emplace(bufferDesc.Name, pCBuffer);
 	}
 }
 
@@ -211,7 +214,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiler::fromFile(const std::filesystem:
 	UINT flags = 0;
 #ifdef _DEBUG
 	flags |= D3DCOMPILE_DEBUG;
-#elif
+#else
 	flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
 

@@ -1,14 +1,20 @@
 #pragma once
 
 #include "DXUtils.h"
+#include "Bindable.h"
 
 struct DirectionalLight {
-	float r, g, b;
-	float intensity;
+	DirectX::XMFLOAT3 color, direction;
 };
 
 class Lighting {
+public:
 
+	void addLight(const DirectionalLight& light);
 	
+
+
+private:
+	std::vector<DirectionalLight> directionals;
 };
 
