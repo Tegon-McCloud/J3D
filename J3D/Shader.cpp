@@ -80,25 +80,6 @@ inline void reflectInputElements(
 
 }
 
-//VertexShader::VertexShader(Graphics& gfx, const std::string& file) {
-//	ComPtr<ID3DBlob> pBlob;
-//	
-//	std::wstring wfile(file.begin(), file.end());
-//
-//	tif(D3DReadFileToBlob(wfile.c_str(), &pBlob));
-//	tif(gfx.getDevice().CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pShader));
-//
-//	ComPtr<ID3D11ShaderReflection> pReflection;
-//	tif(D3DReflect(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), __uuidof(pReflection), &pReflection));
-//
-//	reflectConstantBuffers(gfx, pReflection, constantBuffers);
-//
-//	std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
-//	reflectInputElements(pReflection, elements);
-//
-//	tif(gfx.getDevice().CreateInputLayout(elements.data(), static_cast<UINT>(elements.size()), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
-//}
-
 VertexShader::VertexShader(Graphics& gfx, const std::filesystem::path& file) {
 
 	std::vector<D3D_SHADER_MACRO> macros;
@@ -127,20 +108,6 @@ void VertexShader::bind(Graphics& gfx) {
 		cb.second->bind(gfx);
 	}
 }
-
-//PixelShader::PixelShader(Graphics& gfx, const std::string& file) {
-//	ComPtr<ID3DBlob> pBlob;
-//
-//	std::wstring wfile(file.begin(), file.end());
-//
-//	tif(D3DReadFileToBlob(wfile.c_str(), &pBlob));
-//	tif(gfx.getDevice().CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pShader));
-//
-//	ComPtr<ID3D11ShaderReflection> pReflection;
-//	tif(D3DReflect(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), __uuidof(pReflection), &pReflection));
-//
-//	reflectConstantBuffers(gfx, pReflection, constantBuffers);
-//}
 
 PixelShader::PixelShader(Graphics& gfx, const std::filesystem::path& file, bool colorMap, bool normalMap) {
 

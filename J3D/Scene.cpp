@@ -120,7 +120,7 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 	for (size_t i = 0; i < pAiScene->mNumMeshes; i++) {
 		meshes.emplace_back();
 		Mesh& mesh = meshes.back();
-		aiMesh* pAiMesh = pAiScene->mMeshes[i];
+		aiMesh& aiMesh = *pAiScene->mMeshes[i];
 
 		DXUtils::VertexAttributes vertexAttribs;
 		vertexAttribs.positionFormat = DXUtils::Format(DXUtils::AggregateType::VEC3, DXUtils::ComponentType::FLOAT);
@@ -130,50 +130,50 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 		
 		size_t vertexSize = vertexAttribs.getVertexSize();
 		
-		std::vector<std::byte> vertexData(pAiMesh->mNumVertices * vertexSize);
+		std::vector<std::byte> vertexData(aiMesh.mNumVertices * vertexSize);
 
-		for (size_t i = 0; i < pAiMesh->mNumVertices; i++) {
+		for (size_t i = 0; i < aiMesh.mNumVertices; i++) {
 			size_t offset = vertexSize * i;
 			float* pData = reinterpret_cast<float*>(&vertexData[offset + vertexAttribs.positionOffset()]);
-			pData[0] = pAiMesh->mVertices[i].x;
-			pData[1] = pAiMesh->mVertices[i].y;
-			pData[2] = pAiMesh->mVertices[i].z;
+			pData[0] = aiMesh.mVertices[i].x;
+			pData[1] = aiMesh.mVertices[i].y;
+			pData[2] = aiMesh.mVertices[i].z;
 
 			pData = reinterpret_cast<float*>(&vertexData[offset + vertexAttribs.normalOffset()]);
-			pData[0] = pAiMesh->mNormals[i].x;
-			pData[1] = pAiMesh->mNormals[i].y;
-			pData[2] = pAiMesh->mNormals[i].z;
+			pData[0] = aiMesh.mNormals[i].x;
+			pData[1] = aiMesh.mNormals[i].y;
+			pData[2] = aiMesh.mNormals[i].z;
 
 			pData = reinterpret_cast<float*>(&vertexData[offset + vertexAttribs.tangentOffset()]);
-			pData[0] = pAiMesh->mTangents[i].x;
-			pData[1] = pAiMesh->mTangents[i].y;
-			pData[2] = pAiMesh->mTangents[i].z;
+			pData[0] = aiMesh.mTangents[i].x;
+			pData[1] = aiMesh.mTangents[i].y;
+			pData[2] = aiMesh.mTangents[i].z;
 
-			assert(pAiMesh->GetNumUVChannels() > 0);
-			assert(pAiMesh->mNumUVComponents[0] == 2);
+			assert(aiMesh.GetNumUVChannels() > 0);
+			assert(aiMesh.mNumUVComponents[0] == 2);
 
 			pData = reinterpret_cast<float*>(&vertexData[offset + vertexAttribs.texcoordOffset(0)]);
-			pData[0] = pAiMesh->mTextureCoords[0][i].x;
-			pData[1] = pAiMesh->mTextureCoords[0][i].y;
+			pData[0] = aiMesh.mTextureCoords[0][i].x;
+			pData[1] = aiMesh.mTextureCoords[0][i].y;
 		}
 		
 		std::shared_ptr<VertexBuffer> pVB = gfx.getResourceMgr<VertexBuffer>().resolve("", vertexData, vertexAttribs);
 		mesh.addBindable(std::move(pVB));
 		
-		std::vector<uint32_t> indexData(static_cast<size_t>(pAiMesh->mNumFaces) * 3);
+		std::vector<uint32_t> indexData(static_cast<size_t>(aiMesh.mNumFaces) * 3);
 
-		for (size_t i = 0; i < pAiMesh->mNumFaces; i++) {
-			assert(pAiMesh->mFaces[i].mNumIndices == 3);
+		for (size_t i = 0; i < aiMesh.mNumFaces; i++) {
+			assert(aiMesh.mFaces[i].mNumIndices == 3);
 
-			indexData.push_back(pAiMesh->mFaces[i].mIndices[0]);
-			indexData.push_back(pAiMesh->mFaces[i].mIndices[1]);
-			indexData.push_back(pAiMesh->mFaces[i].mIndices[2]);
+			indexData.push_back(aiMesh.mFaces[i].mIndices[0]);
+			indexData.push_back(aiMesh.mFaces[i].mIndices[1]);
+			indexData.push_back(aiMesh.mFaces[i].mIndices[2]);
 		}
 		
 		std::shared_ptr<IndexBuffer> pIB = gfx.getResourceMgr<IndexBuffer>().resolve("", indexData);
 		mesh.addBindable(pIB);
 
-		std::shared_ptr<Material> pMat = materials[pAiMesh->mMaterialIndex];
+		std::shared_ptr<Material> pMat = materials[aiMesh.mMaterialIndex];
 		mesh.addBindable(pMat);
 
 		std::shared_ptr<VertexShader> pVS = gfx.getResourceMgr<VertexShader>().resolve(

@@ -33,10 +33,12 @@
                 "texCoord" : 0
             },
             "pbrMetallicRoughness" : {
-                "baseColorTexture" : {
-                    "index" : 1,
-                    "texCoord" : 0
-                },
+                "baseColorFactor" : [
+                    0.11732522398233414,
+                    0.11732522398233414,
+                    0.11732522398233414,
+                    1
+                ],
                 "metallicFactor" : 0.8818181753158569,
                 "roughnessFactor" : 0.24090945720672607
             }
@@ -62,9 +64,6 @@
     "textures" : [
         {
             "source" : 0
-        },
-        {
-            "source" : 1
         }
     ],
     "images" : [
@@ -72,11 +71,6 @@
             "mimeType" : "image/png",
             "name" : "anvil_normal",
             "uri" : "anvil_normal.png"
-        },
-        {
-            "mimeType" : "image/png",
-            "name" : "anvil_uv_test",
-            "uri" : "anvil_uv_test.png"
         }
     ],
     "accessors" : [

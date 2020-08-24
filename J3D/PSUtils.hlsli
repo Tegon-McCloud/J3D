@@ -40,7 +40,6 @@ cbuffer material : register(b0) {
 };
 
 
-
 // color
 #ifdef COLOR_MAP
 Texture2D colorMap : register(CONCAT(t, COLOR_MAP_SLOT));

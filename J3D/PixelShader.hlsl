@@ -2,9 +2,17 @@
 #include "PSUtils.hlsli"
 #include "CommonUtils.hlsli"
 
+static const float PI = 3.14159265359f;
+static const float Epsilon = 0.001f;
+
+static const float3 fDielectric = 0.04f;
+
+
 float4 main(PSInput input) : SV_TARGET {
     
-    float3 color = 0.0f.xxx;
+    float3 pxColor = 0.0f.xxx;
+    
+    float3 N = getNormal(input.texCoords, input.tbn);
     
     float3 albedo = getColor(input.texCoords);
     
@@ -14,11 +22,10 @@ float4 main(PSInput input) : SV_TARGET {
        
     for (uint i = 0; i < numLights; i++) {
         float3 L = -directionalLights[i].direction;
-        float3 N = getNormal(input.texCoords, input.tbn);
         
-        color += albedo * max(0.0f, dot(L, N));
+        pxColor += albedo  * max(0.0f, dot(L, N));
     }
     
-    return float4(color, 1.0f);
+    return float4(pxColor, 1.0f);
     
 }
