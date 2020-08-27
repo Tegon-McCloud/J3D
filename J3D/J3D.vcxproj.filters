@@ -221,7 +221,7 @@
       <Filter>Shader Header Files</Filter>
     </None>
     <None Include="CommonUtils.hlsli">
-      <Filter>Resource Files</Filter>
+      <Filter>Shader Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
-cbuffer modelView : register(b0) {
-    float4x4 modelView;
+cbuffer model : register(b0) {
+    float4x4 model;
 };
 
-cbuffer projection : register(b1) {
-    float4x4 projection;
+cbuffer viewProjection : register(b1) {
+    float4x4 viewProjection;
 }

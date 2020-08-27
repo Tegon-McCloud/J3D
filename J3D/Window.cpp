@@ -39,7 +39,7 @@ Window::Window(int width, int height, const std::string& windowTitle) :
 
 	std::wstring wWindowTitle(windowTitle.begin(), windowTitle.end());
 
-	const DWORD style = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME;
+	const DWORD style = WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME;
 
 	RECT windowRect{ 0, 0, width, height };
 	if (AdjustWindowRect(&windowRect, style, false) == 0) {

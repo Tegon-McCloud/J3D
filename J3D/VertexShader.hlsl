@@ -6,16 +6,16 @@ VSOutput main( VSInput input ) {
     
     VSOutput output;
     
-    output.viewPos = mul(float4(input.pos, 1.0f), modelView).xyz;
-    float3 normal = mul((float3) input.normal, (float3x3) modelView);
-    float3 tangent = mul((float3) input.tangent, (float3x3) modelView);
+    output.position = mul(float4(input.pos, 1.0f), model).xyz;
+    float3 normal = mul((float3) input.normal, (float3x3) model);
+    float3 tangent = mul((float3) input.tangent, (float3x3) model);
     float3 bitangent = cross(normal, tangent);
     output.tbn = float3x3(tangent, bitangent, normal);
 
     output.texCoords.r = input.texCoords.r;
     output.texCoords.g = -input.texCoords.g;
     
-    output.pos = mul(float4(output.viewPos, 1.0f), projection);
+    output.screenPos = mul(float4(output.position, 1.0f), viewProjection);
     
     return output;
 }

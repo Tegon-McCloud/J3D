@@ -1,13 +1,13 @@
 #pragma once
 
+class Graphics;
+
 #include "DXUtils.h"
 
 class Camera {
-	friend class Graphics;
 public:
 	Camera();
 
-	DirectX::XMMATRIX getView() const;
 	DirectX::XMMATRIX getProjection() const;
 
 	void moveTo(DirectX::FXMVECTOR pos);
@@ -17,13 +17,10 @@ public:
 	void setFov(float fov);
 	void setZBounds(float zNear, float zFar);
 
-private:
-	void updateView();
 	void updateProjection();
+	void bind(Graphics& gfx);
 
 private:
-
-	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX projection;
 
 	DirectX::XMFLOAT4 position;

@@ -30,14 +30,19 @@ StructuredBuffer<DirectionalLight> directionalLights : register(CONCAT(t, DIRECT
 // Material cbuffer
 struct Material {
     float4 baseColor;
-    float metalness;
+    float metallic;
     float roughness;
 };
 
 cbuffer material : register(b0) {
     Material material;
-    float2 pad;
+    float2 pad1;
 };
+
+cbuffer cameraData : register(b1) {
+    float3 cameraPosition;
+    float pad2;
+}
 
 
 // color
@@ -56,15 +61,15 @@ float4 getColor(in float2 texcoords) {
 
 // metallic and roughness
 #ifdef METALLIC_ROUGHNESS_MAP
-Texture2D metalnessRoughnessMap : register(CONCAT(t, METALLIC_ROUGHNESS_MAP_SLOT));
-SamplerState metalnessRougnessSampler : register(CONCAT(s, METALLIC_ROUGHNESS_SAMPLER_SLOT));
+Texture2D metallicRoughnessMap : register(CONCAT(t, METALLIC_ROUGHNESS_MAP_SLOT));
+SamplerState metallicRougnessSampler : register(CONCAT(s, METALLIC_ROUGHNESS_SAMPLER_SLOT));
 #endif
 
-float2 getMetalnessRoughness(in float2 texcoord) {
+float2 getMetallicRoughness(in float2 texcoord) {
 #ifdef METALLIC_ROUGHNESS_MAP
-    return metalnessRoughnessMap.Sample(metalnessRougnessSampler, texcoord).gb * float2(material.metalness, material.roughness);
+    return metallicRoughnessMap.Sample(metallicRougnessSampler, texcoord).bg * float2(material.metallic, material.roughness);
 #else
-    return float2(material.metalness, material.roughness);
+    return float2(material.metallic, material.roughness);
 #endif
     
 }
@@ -88,6 +93,5 @@ float3 getNormal(in float2 texcoord, in float3x3 tbn) {
     return normalize(mul(float3(0.0f, 0.0f, 1.0f), tbn));
 #endif
 }
-
 
 #endif

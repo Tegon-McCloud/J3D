@@ -13,7 +13,6 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace DXUtils;
 
-
 Graphics::Graphics(HWND hWnd) : 
 	pScene(nullptr),
 	pCamera(std::make_unique<Camera>()) {
@@ -79,7 +78,6 @@ Graphics::~Graphics() {
 	pSwapChain.Reset();
 	pDevice.Reset();
 
-
 #ifdef _DEBUG
 	pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 #endif
@@ -93,25 +91,15 @@ void Graphics::render() {
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), pDSV.Get());
 
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	auto pProjectionCBuffer = getResourceMgr<VSConstantBuffer>().get("projection"); 
-	if (pProjectionCBuffer) {
-		pProjectionCBuffer->set(*this, XMMatrixTranspose(pCamera->getProjection()));
-	}
-
+	
 	pCamera->moveTo(XMVectorSet(0.0f, 4.0f, -4.0f, 1.0f));
 	pCamera->lookAt(XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-	pCamera->updateView();
+	pCamera->bind(*this);
 	
-	//static auto tex = getResourceMgr<PSTexture2D>().resolve("yay", std::filesystem::path("./Models/anvil/anvil_normal.png"));
-	//tex->bind(*this, 0);
-
-	//static auto pSampler = getResourceMgr<PSSampler>().resolve("yay", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP);
-	//pSampler->bind(*this, 0);
-
 	DirectionalLight light;
-	light.color = { 1.0f, 1.0f, 1.0 };
+	light.color = { 100.0f, 100.0f, 100.0f };
 	DirectX::XMStoreFloat3(&light.direction, XMVector3Normalize(
-		XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f)));
+		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f)));
 
 	ComPtr<ID3D11Buffer> lightBuffer;
 	ComPtr<ID3D11ShaderResourceView> lightView;

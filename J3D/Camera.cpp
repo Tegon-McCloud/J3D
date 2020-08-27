@@ -1,4 +1,6 @@
 #include "Camera.h"
+#include "Graphics.h"
+#include "ConstantBuffer.h"
 
 using namespace DirectX;
 
@@ -8,26 +10,45 @@ Camera::Camera() {
     lookAt(XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f));
     updir = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-    updateView();
-
     setFov(1.6f);
     setZBounds(0.01f, 100.0f);
-}
-
-DirectX::XMMATRIX Camera::getView() const {
-    return view;
 }
 
 DirectX::XMMATRIX Camera::getProjection() const {
     return projection;
 }
 
-void Camera::updateView() {
-    view = XMMatrixLookAtLH(XMLoadFloat4(&position), XMLoadFloat4(&focus), XMLoadFloat4(&updir));
-}
-
 void Camera::updateProjection() {
     projection = XMMatrixPerspectiveFovLH(fov, width/height, zNear, zFar);
+}
+
+void Camera::bind(Graphics& gfx) {
+    XMMATRIX view = XMMatrixLookAtLH(
+        XMLoadFloat4(&position),
+        XMLoadFloat4(&focus),
+        XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+    );
+
+    auto pViewProjectionCBuffer = gfx.getResourceMgr<VSConstantBuffer>().get("viewProjection");
+
+    if (pViewProjectionCBuffer) {
+        pViewProjectionCBuffer->set(gfx,
+            XMMatrixMultiplyTranspose(
+                view,
+                projection
+            )
+        );
+    }
+
+    auto pCameraDataCBuffer = gfx.getResourceMgr<PSConstantBuffer>().get("cameraData");
+
+    if (pCameraDataCBuffer) {
+        pCameraDataCBuffer->set(gfx,
+            position
+        );
+    }
+
+
 }
 
 void Camera::moveTo(DirectX::FXMVECTOR pos) {
