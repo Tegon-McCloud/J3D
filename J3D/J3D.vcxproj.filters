@@ -211,9 +211,6 @@
     <None Include="PSUtils.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
-    <None Include="CommonUtils.hlsli">
-      <Filter>Shader Header Files</Filter>
-    </None>
     <None Include="PixelShader.hlsl">
       <Filter>Shader Source Files</Filter>
     </None>
@@ -222,6 +219,9 @@
     </None>
     <None Include="VSUtils.hlsli">
       <Filter>Shader Header Files</Filter>
+    </None>
+    <None Include="CommonUtils.hlsli">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>
