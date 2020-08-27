@@ -205,7 +205,7 @@
   <ItemGroup>
     <None Include="CommonUtils.hlsli" />
     <None Include="PSUtils.hlsli" />
-    <None Include="VSCBuffers.hlsli" />
+    <None Include="VSUtils.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -208,9 +208,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VSCBuffers.hlsli">
-      <Filter>Shader Header Files</Filter>
-    </None>
     <None Include="PSUtils.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
@@ -222,6 +219,9 @@
     </None>
     <None Include="VertexShader.hlsl">
       <Filter>Shader Source Files</Filter>
+    </None>
+    <None Include="VSUtils.hlsli">
+      <Filter>Shader Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

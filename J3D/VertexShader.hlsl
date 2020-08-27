@@ -1,6 +1,6 @@
 
 #include "CommonUtils.hlsli"
-#include "VSCBuffers.hlsli"
+#include "VSUtils.hlsli"
 
 VSOutput main( VSInput input ) {
     
