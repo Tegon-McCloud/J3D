@@ -109,13 +109,26 @@ void VertexShader::bind(Graphics& gfx) {
 	}
 }
 
-PixelShader::PixelShader(Graphics& gfx, const std::filesystem::path& file, const std::shared_ptr<Material>& pMaterial) {
+PixelShader::PixelShader(Graphics& gfx, const std::filesystem::path& file) {
+	std::vector<D3D_SHADER_MACRO> macros;
+
+	ComPtr<ID3DBlob> pBlob = ShaderCompiler::fromFile(file, macros, "main", "ps_5_0");
+
+	tif(gfx.getDevice().CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pShader));
+
+	ComPtr<ID3D11ShaderReflection> pReflection;
+	tif(D3DReflect(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), __uuidof(pReflection), &pReflection));
+
+	reflectConstantBuffers(gfx, pReflection, constantBuffers);
+}
+
+PixelShader::PixelShader(Graphics& gfx, const std::shared_ptr<Material>& pMaterial) {
 
 	std::vector<D3D_SHADER_MACRO> macros;
 	
 	pMaterial->getDefines(macros);
 
-	ComPtr<ID3DBlob> pBlob = ShaderCompiler::fromFile(file, macros, "main", "ps_5_0");
+	ComPtr<ID3DBlob> pBlob = ShaderCompiler::fromFile(pMaterial->getShaderFile(), macros, "main", "ps_5_0");
 
 	tif(gfx.getDevice().CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pShader));
 
@@ -190,6 +203,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiler::fromFile(const std::filesystem:
 		}
 		throw std::runtime_error("Failed to compile pixel shader");
 	}
+
 
 	return pBlob;
 

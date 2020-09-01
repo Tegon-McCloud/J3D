@@ -157,11 +157,11 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 		mesh.addBindable(pMat);
 
 		std::shared_ptr<VertexShader> pVS = gfx.getResourceMgr<VertexShader>().resolve(
-			"", std::filesystem::path("./VertexShader.hlsl"));
+			"", std::filesystem::path("./VS.hlsl"));
 		mesh.addBindable(pVS);
 
 		std::shared_ptr<PixelShader> pPS = gfx.getResourceMgr<PixelShader>().resolve(
-			"", std::filesystem::path("./PixelShaderPBR.hlsl"), pMat);
+			"", pMat);
 		mesh.addBindable(pPS);
 		
 	}

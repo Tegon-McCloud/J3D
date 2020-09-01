@@ -15,6 +15,7 @@ namespace PBR {
 		void bind(Graphics& gfx) override;
 
 		void getDefines(std::vector<D3D_SHADER_MACRO>& macros) const override;
+		std::filesystem::path getShaderFile() const override;
 
 		static bool isCompatible(const aiMaterial& aiMat);
 

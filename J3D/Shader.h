@@ -45,7 +45,10 @@ class PixelShader : public Bindable {
 public:
 	PixelShader(
 		Graphics& gfx,
-		const std::filesystem::path& file,
+		const std::filesystem::path& file);
+
+	PixelShader(
+		Graphics& gfx,
 		const std::shared_ptr<Material>& material);
 
 	void bind(Graphics& gfx);

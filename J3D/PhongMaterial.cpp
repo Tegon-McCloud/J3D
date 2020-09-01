@@ -7,6 +7,10 @@ Phong::Material::Material(Graphics& gfx, std::filesystem::path, const aiMaterial
 
 }
 
+std::filesystem::path Phong::Material::getShaderFile() const {
+	return "PSPhong.hlsl";
+}
+
 bool Phong::Material::isCompatible(const aiMaterial& aiMat) {
 	aiColor4D color = { 0.0f, 0.0f, 0.0f, 0.0f };
 	if (aiMat.Get(AI_MATKEY_COLOR_DIFFUSE, color) != AI_SUCCESS) {

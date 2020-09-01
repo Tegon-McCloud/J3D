@@ -14,6 +14,8 @@ namespace Phong {
 	public:
 		Material(Graphics& gfx, std::filesystem::path, const aiMaterial& aiMat);
 
+		std::filesystem::path getShaderFile() const override;
+
 		static bool isCompatible(const aiMaterial& aiMat);
 
 	};

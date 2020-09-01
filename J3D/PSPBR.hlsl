@@ -98,5 +98,18 @@ float4 main(PSInput input) : SV_TARGET{
         
     }
     
-    return float4(Lo, 1.0f);   
+    pointLights.GetDimensions(numLights, lightStride);
+    
+    for (uint i = 0; i < numLights; i++) {
+        float3 L = pointLights[i].position - input.position;
+        float attenuation = 1.0f / dot(L, L);
+        L = normalize(L);
+        float3 radiance = attenuation * pointLights[i].radiance;
+        
+        Lo += cookTorrance(albedo, metallic, roughness, radiance, N, V, L);
+    }
+    
+    float3 ambient = 0.3.rrr * albedo;
+    
+    return float4(Lo + ambient, 1.0f);
 }

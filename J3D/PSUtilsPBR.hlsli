@@ -27,6 +27,13 @@ struct DirectionalLight {
 
 StructuredBuffer<DirectionalLight> directionalLights : register(CONCAT(t, DIRECTIONAL_LIGHT_SLOT));
 
+struct PointLight {
+    float3 radiance;
+    float3 position;
+};
+
+StructuredBuffer<PointLight> pointLights : register(CONCAT(t, POINT_LIGHT_SLOT));
+
 // Material cbuffer
 struct Material {
     float4 baseColor;

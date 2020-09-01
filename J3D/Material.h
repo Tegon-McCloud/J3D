@@ -16,6 +16,6 @@ public:
 	using Reusable = std::false_type;
 
 	virtual void getDefines(std::vector<D3D_SHADER_MACRO>& macros) const = 0;
-
+	virtual std::filesystem::path getShaderFile() const = 0;
 
 };

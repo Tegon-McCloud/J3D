@@ -217,9 +217,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShader.hlsl">
-      <Filter>Shader Source Files</Filter>
-    </None>
     <None Include="VSUtils.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
@@ -229,7 +226,10 @@
     <None Include="PSUtilsPBR.hlsli">
       <Filter>Shader Header Files</Filter>
     </None>
-    <None Include="PixelShaderPBR.hlsl">
+    <None Include="PSPBR.hlsl">
+      <Filter>Shader Source Files</Filter>
+    </None>
+    <None Include="VS.hlsl">
       <Filter>Shader Source Files</Filter>
     </None>
   </ItemGroup>

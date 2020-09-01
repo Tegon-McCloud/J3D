@@ -98,17 +98,17 @@ void Graphics::render() {
 	
 	DirectionalLight lights[3];
 
-	lights[0].color = { 0.0f, 5.0f, 0.0f };
+	lights[0].color = { 20.0f, 20.0f, 20.0f };
 	DirectX::XMStoreFloat3(&lights[0].direction, XMVector3Normalize(
-		XMVectorSet(0.0f, -0.5f, -1.0f, 0.0f)));
+		XMVectorSet(0.0f, -0.5f, 1.0f, 0.0f)));
 
-	lights[1].color = { 0.0f, 0.0f, 5.0f };
+	lights[1].color = { 20.0f, 20.0f, 20.0f };
 	DirectX::XMStoreFloat3(&lights[1].direction, XMVector3Normalize(
 		XMVectorSet(-1.0f, -0.5f, 0.0f, 0.0f)));
 
-	lights[2].color = { 5.0f, 0.0f, 0.0f };
+	lights[2].color = { 20.0f, 20.0f, 20.0f };
 	DirectX::XMStoreFloat3(&lights[2].direction, XMVector3Normalize(
-		XMVectorSet(1.0f, -0.5f, -0.0f, 0.0f)));
+		XMVectorSet(1.0f, -0.5f, 0.0f, 0.0f)));
 
 
 	ComPtr<ID3D11Buffer> lightBuffer;

@@ -91,6 +91,10 @@ void PBR::Material::getDefines(std::vector<D3D_SHADER_MACRO>& macros) const {
 	}
 }
 
+std::filesystem::path PBR::Material::getShaderFile() const {
+	return "PSPBR.hlsl";
+}
+
 bool PBR::Material::isCompatible(const aiMaterial& aiMat) {
 
 	aiColor4D color(0.0f, 0.0f, 0.0f, 0.0f);
