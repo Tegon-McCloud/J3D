@@ -96,16 +96,26 @@ void Graphics::render() {
 	pCamera->lookAt(XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	pCamera->bind(*this);
 	
-	DirectionalLight light;
-	light.color = { 100.0f, 100.0f, 100.0f };
-	DirectX::XMStoreFloat3(&light.direction, XMVector3Normalize(
-		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f)));
+	DirectionalLight lights[3];
+
+	lights[0].color = { 0.0f, 5.0f, 0.0f };
+	DirectX::XMStoreFloat3(&lights[0].direction, XMVector3Normalize(
+		XMVectorSet(0.0f, -0.5f, -1.0f, 0.0f)));
+
+	lights[1].color = { 0.0f, 0.0f, 5.0f };
+	DirectX::XMStoreFloat3(&lights[1].direction, XMVector3Normalize(
+		XMVectorSet(-1.0f, -0.5f, 0.0f, 0.0f)));
+
+	lights[2].color = { 5.0f, 0.0f, 0.0f };
+	DirectX::XMStoreFloat3(&lights[2].direction, XMVector3Normalize(
+		XMVectorSet(1.0f, -0.5f, -0.0f, 0.0f)));
+
 
 	ComPtr<ID3D11Buffer> lightBuffer;
 	ComPtr<ID3D11ShaderResourceView> lightView;
 
 	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = sizeof(DirectionalLight);
+	desc.ByteWidth = 3 * sizeof(DirectionalLight);
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -113,7 +123,7 @@ void Graphics::render() {
 	desc.StructureByteStride = sizeof(DirectionalLight);
 
 	D3D11_SUBRESOURCE_DATA dataDesc;
-	dataDesc.pSysMem = &light;
+	dataDesc.pSysMem = &lights;
 	dataDesc.SysMemPitch = 0;
 	dataDesc.SysMemSlicePitch = 0;
 
@@ -121,7 +131,7 @@ void Graphics::render() {
 	viewDesc.Format = DXGI_FORMAT_UNKNOWN;
 	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 	viewDesc.Buffer.ElementOffset = 0;
-	viewDesc.Buffer.NumElements = 1;
+	viewDesc.Buffer.NumElements = std::size(lights);
 
 	tif(pDevice->CreateBuffer(&desc, &dataDesc, &lightBuffer));
 	tif(pDevice->CreateShaderResourceView(lightBuffer.Get(), &viewDesc, &lightView));

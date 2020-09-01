@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DXUtils.h"
+#include "Material.h"
 #include "ConstantBuffer.h"
 
 #include <string>
@@ -45,8 +46,7 @@ public:
 	PixelShader(
 		Graphics& gfx,
 		const std::filesystem::path& file,
-		bool colorMap,
-		bool normalMap);
+		const std::shared_ptr<Material>& material);
 
 	void bind(Graphics& gfx);
 

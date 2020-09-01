@@ -2,7 +2,7 @@
 #include "CommonUtils.hlsli"
 #include "VSUtils.hlsli"
 
-VSOutput main( VSInput input ) {
+VSOutput main(VSInput input) {
     
     VSOutput output;
     

@@ -4,6 +4,8 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Material.h"
+#include "PBRMaterial.h"
+#include "PhongMaterial.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -80,39 +82,17 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 	for (size_t i = 0; i < pAiScene->mNumMaterials; i++) {
 		aiMaterial& aiMat = *pAiScene->mMaterials[i];
 
-		MaterialConstants matConsts;
-		
-		aiColor4D color(0.0f, 0.0f, 0.0f, 0.0f);
-		if (aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_FACTOR, color) != AI_SUCCESS ||
-			aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLIC_FACTOR, matConsts.metallic) != AI_SUCCESS ||
-			aiMat.Get(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_ROUGHNESS_FACTOR, matConsts.roughness) != AI_SUCCESS) {
-			throw std::runtime_error("");
-		}
+		std::shared_ptr<Material> pMaterial;
 
-		matConsts.color[0] = color.r;
-		matConsts.color[1] = color.g;
-		matConsts.color[2] = color.b;
-		matConsts.color[3] = color.a;
-
-		std::shared_ptr<Material> pMaterial = gfx.getResourceMgr<Material>().resolve("", matConsts);
-		
-		aiString colorTexFile;
-		if (aiMat.GetTexture(AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_BASE_COLOR_TEXTURE, &colorTexFile) == AI_SUCCESS) {
-			std::filesystem::path fullPath = file.parent_path() / colorTexFile.C_Str();
-			pMaterial->setColorMap(gfx.getResourceMgr<PSTexture2D>().resolve(fullPath.generic_string(), fullPath),
-				gfx.getResourceMgr<PSSampler>().resolve("default", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP));
-		}
-
-		aiString normalTexFile;
-		if (aiMat.GetTexture(aiTextureType_NORMALS, 0, &normalTexFile) == AI_SUCCESS) {
-			std::filesystem::path fullPath = file.parent_path() / normalTexFile.C_Str();
-			pMaterial->setNormalMap(gfx.getResourceMgr<PSTexture2D>().resolve(fullPath.generic_string(), fullPath), 
-				gfx.getResourceMgr<PSSampler>().resolve("default", D3D11_TEXTURE_ADDRESS_WRAP, D3D11_TEXTURE_ADDRESS_WRAP));
+		if (PBR::Material::isCompatible(aiMat)) {
+			pMaterial = gfx.getResourceMgr<PBR::Material>().resolve("", file, aiMat);
+		} else if (Phong::Material::isCompatible(aiMat)) {
+			
+		} else {
+			throw std::runtime_error("unsupported material");
 		}
 
 		materials.push_back(pMaterial);
-
-		
 
 	}
 
@@ -177,11 +157,11 @@ Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
 		mesh.addBindable(pMat);
 
 		std::shared_ptr<VertexShader> pVS = gfx.getResourceMgr<VertexShader>().resolve(
-			"vs", std::filesystem::path("./VertexShader.hlsl"));
+			"", std::filesystem::path("./VertexShader.hlsl"));
 		mesh.addBindable(pVS);
 
 		std::shared_ptr<PixelShader> pPS = gfx.getResourceMgr<PixelShader>().resolve(
-			"ps", std::filesystem::path("./PixelShader.hlsl"), pMat->hasColorMap(), pMat->hasNormalMap());
+			"", std::filesystem::path("./PixelShaderPBR.hlsl"), pMat);
 		mesh.addBindable(pPS);
 		
 	}

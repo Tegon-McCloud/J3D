@@ -1,6 +1,6 @@
 
 #include "CommonUtils.hlsli"
-#include "PSUtils.hlsli"
+#include "PSUtilsPBR.hlsli"
 
 static const float PI = 3.14159265359f;
 static const float Epsilon = 0.001f;
@@ -44,6 +44,36 @@ float3 fresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+float3 cookTorrance(
+    in float3 albedo,
+    in float metallic,
+    in float roughness,
+    in float3 irradiance,
+    in float3 N,
+    in float3 V,
+    in float3 L) {
+    
+    float3 H = normalize(L + V);
+    
+    float3 F0 = lerp(FDielectric, albedo, metallic);
+    float3 F = fresnelSchlick(max(dot(H, V), 0.0f), F0);
+    
+    float numer = distributionGGX(N, H, roughness) * geometrySmith(N, V, L, roughness) * F;
+    float denom = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f);
+    
+    float fcookTorrance = numer / max(denom, 0.001f);
+    
+    float3 ks = F;
+    float3 kd = (1.0f - ks) * (1.0f - metallic);
+    
+    float fr = kd * albedo / PI + ks * fcookTorrance;
+    
+    return fr * max(dot(N, L), 0.0f) * irradiance;
+
+}
+
+
+
 float4 main(PSInput input) : SV_TARGET{
 
     float3 albedo = getColor(input.texCoords).rgb;
@@ -54,8 +84,6 @@ float4 main(PSInput input) : SV_TARGET{
     float3 N = getNormal(input.texCoords, input.tbn);
     float3 V = normalize(cameraPosition - input.position);
 
-    float3 F0 = lerp(FDielectric, albedo, metallic);
-
     float3 Lo = 0.0f.rrr;
 
     uint numLights;
@@ -64,25 +92,10 @@ float4 main(PSInput input) : SV_TARGET{
        
     for (uint i = 0; i < numLights; i++) {
         float3 L = -directionalLights[i].direction;
-        float3 H = normalize(V + L);
-
-        float3 radiance = -directionalLights[i].radiance;
-
-        float NDF = distributionGGX(N, H, roughness);
-        float G = geometrySmith(N, V, L, roughness);
-        float3 F = fresnelSchlick(max(dot(H, V), 0.0f), F0);
-
-        float3 kS = F;
-        //float3 kD = 1.0f.rrr - kS;
-        //kD *= 1.0f - metallic;
-        float3 kD = 1.0f.rrr;
-
-        float3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        float3 specular = numerator / max(denominator, 0.001f);
+        float3 radiance = directionalLights[i].radiance;
+           
+        Lo += cookTorrance(albedo, metallic, roughness, radiance, N, V, L);
         
-        float NdotL = max(dot(N, L), 0.0f);
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
     
     return float4(Lo, 1.0f);   

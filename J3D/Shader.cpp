@@ -109,12 +109,11 @@ void VertexShader::bind(Graphics& gfx) {
 	}
 }
 
-PixelShader::PixelShader(Graphics& gfx, const std::filesystem::path& file, bool colorMap, bool normalMap) {
+PixelShader::PixelShader(Graphics& gfx, const std::filesystem::path& file, const std::shared_ptr<Material>& pMaterial) {
 
 	std::vector<D3D_SHADER_MACRO> macros;
 	
-	if (colorMap) macros.push_back({ "COLOR_MAP", nullptr });
-	if (normalMap) macros.push_back({ "NORMAL_MAP", nullptr });
+	pMaterial->getDefines(macros);
 
 	ComPtr<ID3DBlob> pBlob = ShaderCompiler::fromFile(file, macros, "main", "ps_5_0");
 

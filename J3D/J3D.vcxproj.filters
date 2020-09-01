@@ -114,7 +114,10 @@
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="PBRMaterial.cpp">
+      <Filter>Source Files\DX\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="PhongMaterial.cpp">
       <Filter>Source Files\DX\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
@@ -206,14 +209,14 @@
     <ClInclude Include="Lighting.h">
       <Filter>Header Files\DX</Filter>
     </ClInclude>
+    <ClInclude Include="PBRMaterial.h">
+      <Filter>Header Files\DX\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="PhongMaterial.h">
+      <Filter>Header Files\DX\Bindables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PSUtils.hlsli">
-      <Filter>Shader Header Files</Filter>
-    </None>
-    <None Include="PixelShader.hlsl">
-      <Filter>Shader Source Files</Filter>
-    </None>
     <None Include="VertexShader.hlsl">
       <Filter>Shader Source Files</Filter>
     </None>
@@ -222,6 +225,12 @@
     </None>
     <None Include="CommonUtils.hlsli">
       <Filter>Shader Header Files</Filter>
+    </None>
+    <None Include="PSUtilsPBR.hlsli">
+      <Filter>Shader Header Files</Filter>
+    </None>
+    <None Include="PixelShaderPBR.hlsl">
+      <Filter>Shader Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>
