@@ -7,19 +7,28 @@
 #include <iostream>
 
 JNIEXPORT jlong JNICALL Java_j3d_Scene_init(JNIEnv* env, jobject jthis, jobject jgfx, jstring jfile) {
-	Graphics* pGfx = getNative<Graphics>(env, jgfx);
+	JNI_TRY(
 
-	jboolean isCopy;
-	const char* utfFile = env->GetStringUTFChars(jfile, &isCopy);
-	std::string file(utfFile);
-	env->ReleaseStringUTFChars(jfile, utfFile);
+		Graphics* pGfx = getNative<Graphics>(env, jgfx);
 
-	std::filesystem::path path(file);
-	if (!std::filesystem::exists(path)) {
-		std::cerr << "Error: file does not exist: " << path.c_str() << std::endl;
-	}
+		jboolean isCopy;
+		const char* utfFile = env->GetStringUTFChars(jfile, &isCopy);
+		std::string file(utfFile);
+		env->ReleaseStringUTFChars(jfile, utfFile);
 
-	return reinterpret_cast<jlong>(new Scene(*pGfx, file));
+		std::filesystem::path path(file);
+		if (!std::filesystem::exists(path)) {
+			std::cerr << "Error: file does not exist: " << path.c_str() << std::endl;
+		}
+		try {
+			return reinterpret_cast<jlong>(new Scene(*pGfx, file));
+		} catch (std::runtime_error& e) {
+			jniThrowByName(env, "java/io/FileNotFoundException", e.what());
+			return NULL;
+		}
+		
+	)
+
 }
 
 JNIEXPORT void JNICALL Java_j3d_Scene_close(JNIEnv* env, jobject jthis) {

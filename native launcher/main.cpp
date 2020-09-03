@@ -1,5 +1,4 @@
 
-
 #pragma warning(push, 0)
 #include <jni.h>
 #pragma warning(pop)
@@ -10,7 +9,6 @@
 
 JavaVM* jvm;
 JNIEnv* env;
-
 
 void createJVM() {
 

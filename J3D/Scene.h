@@ -37,7 +37,6 @@ public:
 	SceneNode* getNode(size_t index);
 	Mesh* getMesh(const std::string& name);
 	Mesh* getMesh(size_t index);
-
 	void draw(class Graphics& gfx);
 
 private:

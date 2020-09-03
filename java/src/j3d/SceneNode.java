@@ -10,8 +10,12 @@ public class SceneNode {
         nativeHandle = handle;
     }
 
+    public native void rotateX(float angle);
     public native void rotateY(float angle);
     public native void rotateZ(float angle);
+
+    public native void translate(float x, float y, float z);
+    public native void scale(float x, float y, float z);
 
     
 }

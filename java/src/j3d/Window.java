@@ -51,13 +51,16 @@ public class Window {
 		Mouse mouse = wnd.getMouse();
 		Graphics gfx = wnd.getGraphics();
 
-		Scene scene = new Scene(gfx, new File("models/anvil/anvil.gltf"));
+		Scene scene = new Scene(gfx, new File("models/cannon/cannon.gltf"));
 		gfx.setScene(scene);
 
 		KeyEvent keyEvent;
 		MouseEvent mouseEvent;
 
-		SceneNode anvilNode = scene.getNode("anvil");
+		SceneNode anvilNode = scene.getRootNode();
+		anvilNode.scale(2.0f, 2.0f, 2.0f);
+		anvilNode.rotateX((float)Math.PI / 2.0f);
+		anvilNode.translate(0.0f, 2.0f, 0.0f);
 
 		long t0 = System.currentTimeMillis();
 		long t1;

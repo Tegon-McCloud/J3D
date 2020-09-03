@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     j3d_SceneNode
+ * Method:    rotateX
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_j3d_SceneNode_rotateX
+  (JNIEnv *, jobject, jfloat);
+
+/*
+ * Class:     j3d_SceneNode
  * Method:    rotateY
  * Signature: (F)V
  */
@@ -22,6 +30,22 @@ JNIEXPORT void JNICALL Java_j3d_SceneNode_rotateY
  */
 JNIEXPORT void JNICALL Java_j3d_SceneNode_rotateZ
   (JNIEnv *, jobject, jfloat);
+
+/*
+ * Class:     j3d_SceneNode
+ * Method:    translate
+ * Signature: (FFF)V
+ */
+JNIEXPORT void JNICALL Java_j3d_SceneNode_translate
+  (JNIEnv *, jobject, jfloat, jfloat, jfloat);
+
+/*
+ * Class:     j3d_SceneNode
+ * Method:    scale
+ * Signature: (FFF)V
+ */
+JNIEXPORT void JNICALL Java_j3d_SceneNode_scale
+  (JNIEnv *, jobject, jfloat, jfloat, jfloat);
 
 #ifdef __cplusplus
 }

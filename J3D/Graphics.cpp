@@ -13,9 +13,9 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace DXUtils;
 
-Graphics::Graphics(HWND hWnd) : 
-	pScene(nullptr),
-	pCamera(std::make_unique<Camera>()) {
+	Graphics::Graphics(HWND hWnd) : 
+		pScene(nullptr),
+		pCamera(std::make_unique<Camera>()) {
 
 	ComPtr<ID3D11Device> pDevice;
 	ComPtr<IDXGISwapChain> pSwapChain;
@@ -85,7 +85,7 @@ Graphics::~Graphics() {
 
 void Graphics::render() {
 	
-	const float rgba[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	const float rgba[] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	pContext->ClearRenderTargetView(pRTV.Get(), rgba);
 	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), pDSV.Get());
@@ -102,7 +102,7 @@ void Graphics::render() {
 	DirectX::XMStoreFloat3(&lights[0].direction, XMVector3Normalize(
 		XMVectorSet(0.0f, -0.5f, 1.0f, 0.0f)));
 
-	lights[1].color = { 20.0f, 20.0f, 20.0f };
+	lights[1].color = { 0.0f, 0.0f, 0.0f };
 	DirectX::XMStoreFloat3(&lights[1].direction, XMVector3Normalize(
 		XMVectorSet(-1.0f, -0.5f, 0.0f, 0.0f)));
 

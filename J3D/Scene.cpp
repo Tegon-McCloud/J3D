@@ -7,6 +7,7 @@
 #include "PBRMaterial.h"
 #include "PhongMaterial.h"
 
+#include <assimp/DefaultLogger.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -72,10 +73,13 @@ void SceneNode::transform(DirectX::FXMMATRIX transform) {
 }
 
 Scene::Scene(Graphics& gfx, const std::filesystem::path& file) {
-	
+
 	Assimp::Importer imp;
-	imp.ReadFile(file.generic_string(), aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
-	aiScene* pAiScene = imp.GetOrphanedScene();
+	const aiScene* pAiScene = imp.ReadFile(file.generic_string(), aiProcess_JoinIdenticalVertices | aiProcess_Triangulate);
+	
+	if (!pAiScene) {
+		throw std::runtime_error(std::string("File was not found or was invalid: ") + file.string());
+	}
 
 	std::vector<std::shared_ptr<Material>> materials;
 
